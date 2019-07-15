@@ -1,0 +1,212 @@
+
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="http://cdn.grapecity.com/spreadjs/hosted/css/gc.spread.sheets.excel2013white.12.1.0.css">
+
+    <script src="http://code.jquery.com/jquery-1.8.2.min.js" type="text/javascript"></script>
+    <script src="http://cdn.grapecity.com/spreadjs/hosted/scripts/gc.spread.sheets.all.12.1.0.min.js" type="text/javascript"></script>
+    <script src="http://cdn.grapecity.com/spreadjs/hosted/scripts/resources/zh/gc.spread.sheets.resources.zh.12.1.0.min.js" type="text/javascript"></script>
+    <script src="http://cdn.bootcss.com/FileSaver.js/2014-11-29/FileSaver.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div id='ss' style='width:500px; height:200px;float:left'></div>
+<div id='ss1' style='width:500px; height:200px;float:left'></div>
+<input type="button" value="背景色" id="backcolor" />
+
+<script>
+    $(document).ready(function () {
+        var spread = new GC.Spread.Sheets.Workbook(document.getElementById("ss"));
+        var spread1 = new GC.Spread.Sheets.Workbook(document.getElementById("ss1"));
+        var sheet = spread.getActiveSheet();
+        var sheet1 = spread1.getActiveSheet();
+        var spreadNS = GC.Spread.Sheets;
+
+
+       /* var command = {
+            canUndo: true,
+            execute: function (context, options, isUndo) {
+                var Commands = GC.Spread.Sheets.Commands;
+                if (isUndo) {
+                    Commands.undoTransaction(context, options);
+                    return true;
+                } else {
+                    Commands.startTransaction(context, options); //开启事务
+                    var sheet = context.getSheetFromName(options.sheetName);  //获取sheet 名称
+                    //var cell = sheet.getCell(options.row, options.col);
+                    //cell.backColor(options.backColor);
+                    Commands.endTransaction(context, options);  //结束事务
+                    return true;
+                }
+            }
+        };*/
+
+        //增加行
+        var command = {
+            canUndo: true,
+            execute: function (context, options, isUndo) {
+                var Commands = GC.Spread.Sheets.Commands;
+                // 在此加cmd
+                options.cmd = "insertRowsBehind";
+                if (isUndo) {
+                    Commands.undoTransaction(context, options);
+                    return true;
+                } else {
+                    Commands.startTransaction(context, options);
+                    var sheetNew = context.getSheetFromName(options.sheetName);
+                    var sels = sheet.getSelections();
+                    if(sels && sels.length > 0){
+                        for(var i=0; i<sels.length; i++ ){
+                            var sel = sels[i];
+                            var row = sel.row;
+                            var rowCount = sel.rowCount;
+                            sheetNew.addRows(row+1, rowCount);
+                        }
+                    }
+                    Commands.endTransaction(context, options);
+                    return true;
+                }
+            }
+        };
+
+
+        var commandManager1 = spread1.commandManager();
+        spread.commandManager().register("insertRowsBehind",command);
+        commandManager1.register("insertRowsBehind",command);
+
+        // 获取右键菜单数组
+        var menuData = spread.contextMenu.menuData;
+        //var menuData1 = spread.contextMenu.menuData;
+
+
+        console.log(menuData);
+
+        // 定义一个在行头区域执行的右键菜单项
+        var insertRowsBehind = {
+            command: "insertRowsBehind",
+            text: "Insert",
+            // name只要不重复即可
+            name: "insertRowsBehind",
+            // 把自己定义好的icon class加在这里
+            iconClass:"gc-spread-custom-icon",
+            workArea: "rowHeader"
+        };
+
+         // 将自定义的项，加入到“插入行”（insertRows）之后
+       /*      menuData.forEach(function (item, index) {
+            if(item && item.name === "gc.spread.insertRows"){
+                menuData.splice(index+1, 0, insertRowsBehind);
+            }
+        });
+
+        menuData1.forEach(function (item, index) {
+            if(item && item.name === "gc.spread.insertRows"){
+                menuData1.splice(index+1, 0, insertRowsBehind);
+            }
+        });*/
+
+
+
+
+      //删除行
+        var command1 = {
+            canUndo: true,
+            execute: function (context, options, isUndo) {
+                var Commands = GC.Spread.Sheets.Commands;
+                // 在此加cmd
+                options.cmd = "deleteRowsLine";
+                if (isUndo) {
+                    Commands.undoTransaction(context, options);
+                    return true;
+                } else {
+                    Commands.startTransaction(context, options);
+                    var sheetNew = context.getSheetFromName(options.sheetName);
+                    var sels = sheet.getSelections();
+                    if(sels && sels.length > 0){
+                        for(var i=0; i<sels.length; i++ ){
+                            var sel = sels[i];
+                            var row = sel.row;
+                            var rowCount = sel.rowCount;
+                            sheetNew.deleteRows(row, rowCount);
+                        }
+                       // sheetNew.rePaint();
+                    }
+                    Commands.endTransaction(context, options);
+                    return true;
+                }
+            }
+        };
+
+
+        spread.commandManager().register("deleteRowsLine",command1);
+        commandManager1.register("deleteRowsLine",command1);
+
+
+        var deleteRowsLine = {
+            command: "deleteRowsLine",
+            text: "delete",
+            // name只要不重复即可
+            name: "deleteRowsLine",
+            // 把自己定义好的icon class加在这里
+            iconClass:"gc-spread-custom-icon",
+            workArea: "rowHeader"
+        };
+
+
+
+        var newMenuData = [];
+        menuData.forEach(function (item) {
+            if(item){
+                if( item.name === "gc.spread.insertRows" ){
+                    newMenuData.push(insertRowsBehind);
+                    return;
+                }else if(item.name === "gc.spread.deleteRows"){
+                    newMenuData.push(deleteRowsLine);
+                }else{
+                    newMenuData.push(item);
+                }
+
+            }
+        });
+
+
+       // newMenuData.unshift(insertRowsBehind);
+
+        spread.contextMenu.menuData = newMenuData;
+        spread1.contextMenu.menuData = newMenuData;
+        console.log(spread.contextMenu.menuData );
+
+
+        spread1.sheets[0].visible(true);
+
+       // var commandManager = spread.commandManager();
+        //var commandManager1 = spread1.commandManager();
+
+
+        //commandManager.register("changeBackColor", command);
+        //commandManager1.register("changeBackColor", command);
+
+        /*添加监听*/
+        spread.commandManager().addListener("rowchanged",function(){
+            console.log("111");
+            for(var i=0;i<arguments.length;i++){
+                var cmd = arguments[i].command;
+                console.log(cmd);
+                commandManager1.execute(cmd);
+                console.log("2222");
+            }
+        });
+
+
+
+
+
+        /*移除监听*/
+        //spread.commandManager().removeListener("anyscLicenser");
+
+    });
+
+</script>
+</body>
+</html>

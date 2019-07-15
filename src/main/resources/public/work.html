@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <title>Insert title here</title>
+    <link rel="stylesheet" type="text/css" href="http://cdn.grapecity.com/spreadjs/hosted/css/gc.spread.sheets.excel2013white.12.1.0.css">
+
+    <script src="http://code.jquery.com/jquery-1.8.2.min.js" type="text/javascript"></script>
+    <script src="http://cdn.grapecity.com/spreadjs/hosted/scripts/gc.spread.sheets.all.12.1.0.min.js" type="text/javascript"></script>
+    <script src="http://cdn.bootcss.com/FileSaver.js/2014-11-29/FileSaver.js" type="text/javascript"></script>
+    <script src="/js/demo/gc.spread.excelio.12.0.0.min.js" type="text/javascript"></script>
+    <script src="http://cdn.grapecity.com/spreadjs/hosted/scripts/plugins/gc.spread.sheets.charts.12.1.0.min.js" type="text/javascript"></script>
+    <script src="http://cdn.grapecity.com/spreadjs/hosted/scripts/resources/zh/gc.spread.sheets.resources.zh.12.1.0.min.js" type="text/javascript"></script>
+    <script src="/js/demo/demo3.js" type="text/javascript"></script>
+    <style>
+
+        .button1 {
+             margin-left:10px;
+            display:inline-block !important;
+        }
+
+        .buttonLine{
+            margin-top:10px;
+            margin-bottom:10px;
+
+        }
+    </style>
+</head>
+<body style="margin:0;position:absolute;top:0;bottom:0;left:0;right:0;font-size:14px;user-select:none;-webkit-user-select: none;overflow:hidden;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';" >
+
+<div class="buttonLine">
+    <div class = "button1">
+        <button id="nextPage" onclick="addThreeRow()">添三级级标题</button>
+    </div>
+    <div class = "button1">
+      <button id="nextPage" onclick="addFourTitleRow()">添加四级标题</button>
+    </div>
+    <div class = "button1">
+        <button id="prePage" onclick="deleteRow()">删除</button>
+    </div>
+  <!--
+    <div class = "button1">
+        <button id="prePage" onclick="prePage(false)">上一页</button>
+    </div>  -->
+</div>
+
+<div style="height: 90%; position: relative">
+  <div id='ss' style='width:100%; height:100%;'></div>
+  <form name="myform" id="myform" enctype="multipart/form-data" method="post"></form>
+</div>
+</body>
+</html>

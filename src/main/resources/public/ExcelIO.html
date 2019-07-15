@@ -1,0 +1,687 @@
+<!doctype html>
+<html style="height:100%;font-size:14px;">
+
+<head>
+    <meta name="spreadjs culture" content="zh-cn" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="http://cdn.grapecity.com/spreadjs/hosted/css/gc.spread.sheets.excel2013white.12.1.0.css">
+
+
+    <script src="http://code.jquery.com/jquery-1.8.2.min.js" type="text/javascript"></script>
+    <script src="http://cdn.grapecity.com/spreadjs/hosted/scripts/gc.spread.sheets.all.12.1.0.min.js" type="text/javascript"></script>
+    <script src="http://cdn.bootcss.com/FileSaver.js/2014-11-29/FileSaver.js" type="text/javascript"></script>
+    <script src="https://cdn.grapecity.com.cn/spreadjs/scripts/interop/gc.spread.excelio.12.0.0.min.js" type="text/javascript"></script>
+    <script src="http://cdn.grapecity.com/spreadjs/hosted/scripts/plugins/gc.spread.sheets.charts.12.1.0.min.js" type="text/javascript"></script>
+    <script src="http://cdn.grapecity.com/spreadjs/hosted/scripts/resources/zh/gc.spread.sheets.resources.zh.12.1.0.min.js" type="text/javascript">
+    </script>
+<!--
+    <script src="../resources/js/scripts/interop/jquery-1.8.2.min.js" type="text/javascript"></script>
+     <script src="../resources/js/scripts/interop/gc.spread.sheets.all.12.0.0.min.js" type="text/javascript"></script>
+     <script src="http://cdn.bootcss.com/FileSaver.js/2014-11-29/FileSaver.js" type="text/javascript"></script>
+     <script src="../resources/js/scripts/interop/gc.spread.excelio.12.0.0.min.js" type="text/javascript"></script>
+    <script src="../resources/js/scripts/interop/gc.spread.sheets.shapes.12.0.0.min.js" type="text/javascript"></script>
+    <script src="../resources/js/scripts/interop/gc.spread.sheets.charts.12.0.0.min.js" type="text/javascript"></script>
+    <script src="../resources/js/scripts/interop/licensen.js" type="text/javascript"></script>-->
+
+    <!--数据校验-->
+
+
+    <!--<script src="../resources/js/scripts/interop/gc.spread.calcengine.12.0.0.min.js" type="text/javascript"></script>
+    <script src="../resources/js/scripts/interop/gc.spread.calcengine.advancedfunctions.12.0.0.min.js" type="text/javascript"></script>
+    <script src="../resources/js/scripts/interop/gc.spread.calcengine.basicfunctions.12.0.0.min.js" type="text/javascript"></script>
+    <script src="../resources/js/scripts/interop/gc.spread.sheets.core.12.0.0.min.js" type="text/javascript"></script>
+
+    <script src="../resources/js/scripts/interop/gc.spread.sheets.conditionalformatting.12.0.0.min.js" type="text/javascript"></script>
+    <script src="../resources/js/scripts/interop/gc.spread.sheets.datavalidation.12.0.0.min.js" type="text/javascript"></script>-->
+
+ <style>*{-webkit-tap-highlight-color: rgba(0,0,0,0);}
+
+.sample-tutorial {
+     position: relative;
+     height: 100%;
+     overflow: hidden;
+}
+
+.sample-spreadsheets {
+    width: calc(100% - 280px);
+    height: 100%;
+    overflow: hidden;
+    float: left;
+}
+
+.options-container {
+    float: right;
+    width: 280px;
+    padding: 12px;
+    height: 100%;
+    box-sizing: border-box;
+    background: #fbfbfb;
+    overflow: auto;
+}
+
+.sample-options {
+    z-index: 1000;
+}
+
+.inputContainer {
+    width: 100%;
+    height: auto;
+    border: 1px solid #eee;
+    padding: 6px 12px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.input {
+    font-size: 14px;
+    height: 20px;
+    border: 0;
+    outline: none;
+    background: transparent;
+}
+
+.button {
+    height: 30px;
+    padding: 6px 12px;
+    width: 80px;
+    margin-top: 6px;
+}
+
+.group {
+    padding: 12px;
+}
+
+.group input {
+    padding: 4px 12px;
+}</style>
+</head>
+
+<body style="margin:0;position:absolute;top:0;bottom:0;left:0;right:0;font-size:14px;user-select:none;-webkit-user-select: none;overflow:hidden;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'">
+     <div class="sample-tutorial">
+        <div id="ss" class="sample-spreadsheets"></div>
+
+        <div class="options-container">
+            <div class="option-row">
+                <div class="inputContainer">
+                    <input type="file" id="fileDemo" class="input">
+                    <input type="button" id="loadExcel" value="import" class="button">
+                </div>
+                <div class="inputContainer">
+                    <input id="exportFileName" value="export.xlsx" class="input">
+                    <input type="button" id="saveExcel" value="export" class="button">
+                </div>
+            </div>
+            <div class="option-row">
+                <div class="group">
+                    <label>Password:
+                        <input type="password" id="password">
+                    </label>
+                </div>
+            </div>
+            <div class="option-row">
+                <label>Zoom:</label>
+                <input id="zoomFactor" type="range" name="points" min="0" max="4" value="1" />
+            </div>
+            <div class="option-row">
+                <label>打开关闭10000次</label>
+                <button id="openAndClose10000">打开关闭10000次</button>
+            </div> <br/>
+
+
+            <div class="option-row">
+                <label>更新10000行</label>
+                <button id="update10000">更新10000行</button>
+            </div> <br/>
+
+
+            <div class="option-row">
+                <label>隐藏1行</label>
+            <button id="hidRow">隐藏1行</button>
+            </div> <br/>
+
+            <div class="option-row">
+                <label>显示第一行</label>
+                <button id="showRow">显示1行</button>
+            </div>  <br>
+
+            <div class="option-row">
+                <label>打开1级行分组</label>
+                <button id="showAllGroup">打开1级行分组</button>
+            </div> <br>
+
+            <div class="option-row">
+                <label>关闭1级分组</label>
+                <button id="hiddenAllGroup">关闭1级行分组</button>
+            </div><br>
+
+            <div class="option-row">
+                <label>打开2级行分组</label>
+                <button id="showAllGroup1">打开2级行分组</button>
+            </div> <br>
+
+            <div class="option-row">
+                <label>关闭2级行分组</label>
+                <button id="hiddenAllGroup1">关闭2级行分组</button>
+            </div><br>
+
+            <div class="option-row">
+                <label>关闭指定列分组</label>
+                <button id="hiddenColumnGroup">关闭指定列分组</button>
+            </div><br>
+
+            <div class="option-row">
+                <label>打开指定列分组</label>
+                <button id="opendColumnGroup">打开指定列分组</button>
+            </div><br>
+
+            <div class="option-row">
+                <label>关闭分组级别</label>
+                <button id="closeGroupLevel">关闭分组级别</button>
+            </div><br>
+
+             <div class="option-row">
+                <label>绑定enter键盘为下一个cell</label>
+                <button id="engter">绑定</button>
+             </div><br>
+
+              <div class="option-row">
+                     <label>设置超链接</label>
+                     <button id="hyperLinkCell">设置超链接</button>
+               </div><br>
+
+
+
+             <div class="option-row">
+                <label>设置校验提醒</label>
+                <button id="setDataValidator">设置校验提醒</button>
+              </div><br>
+
+
+              <div class="option-row">
+                  <label>快速显示到50行D列</label>
+                  <button id="showColumn">设置校验提醒</button>
+               </div><br>
+
+
+
+              <div class="option-row">
+                 <label>编程实现复制粘贴</label>
+                 <button id="endableCopyAndPase">复制粘贴</button>
+              </div><br>
+
+
+            <div class="option-row">
+                <label>表格</label>
+                <button id="table">表格</button>
+            </div><br>
+
+        </div>
+    </div>
+    <script type="text/javascript">
+      // GC.Spread.Sheets.LicenseKey = "spreadjs.360bid.top,E168235247966414#B0LUdlEbMdmYwRVVQZFRkhzRPNkUzVncmVXNxFDTNFnQOJWN6IHUU9GdrITZ8kzd4x4MKtkT7AVZidGRUZlb6F6cVdWe7tSZ0l5YY94YCZHevhDWxpmYX5URDt4c9kHTvMVcKVWWndncCdlU94mN7VUTwMHSrc6c9cXcBZVRtBjUYh7YDF4b7ckNQdVdP3iYvIFNKdHR85mZn54V7QEakd5L9k5UjZXRIhTQMx4UwRlTXJzYQF6Vu3WNM34SLdDVExmVOplbwo7VvUkSURHNElFT6pHOh96ar3EUa5kYKVjd6xmNZhDb8cHcrpmYqJkWWNkaBh4TElkaDZVSzBDSNZldRRTcZhEerZVZW5kI0IyUiwiI5MkMEFUQ6YjI0ICSiwyM6MTO7czNykTM0IicfJye#4Xfd5nIJZUOCJiOiMkIsIiMx8idgMlSgQWYlJHcTJiOi8kI1tlOiQmcQJCLiITM7QTMwACNxUDM9EDMyIiOiQncDJCLiMTM6ATOxAjMiojIwhXRiwiIw3GduQWaiBjNz8ycqRWYlJHczJiOiMXbEJCLig1jlzahlDZmpnInmnIvvzqukfJjljIvvHqil7Inm/agmH0vkfpvlT9rmPJmmLiOiEmTDJCLlVnc4pjIsZXRiwiI4EDN6YTO7QjM5MjM8YTMiojIklkIs4XZzxWYmpjIyNHZisnOiwmbBJye0ICRiwiI34zZaZlNNBzTCpEO5JUOxdkcUtUOSBjbDNnQKxGekJmNZl5V4cHMGNWTBNVbmVzRCp7QsRkc5MDeiB7UNNzbqZ4Y7EGVhlkQ4hSR6l";
+        window.onload = function() {
+            var spread = new GC.Spread.Sheets.Workbook(document.getElementById("ss"));
+
+
+
+            spread.options.highlightInvalidData = true;
+
+            //spread.fromJSON(jsonData);
+            var excelIo = new GC.Spread.Excel.IO();
+            var sheet = spread.getActiveSheet();
+               console.log(sheet);
+
+
+            /*sheet.getCell(1, 1).bind(GC.Spread.Sheets.Events.ValidationError, function(e, args) {
+               alert(1111);
+           });*/
+
+
+
+            //清空默认的选择区域
+            sheet.clearSelection();
+            sheet.setActiveCell(4, 4, 2, 2); //设置激活的单元格
+            //sheet.addSelection(3, 3, 2, 2);
+            //spread.options.allowUserDeselect = true;
+
+             spread.options.allowExtendPasteRange = true;
+
+
+            document.getElementById("openAndClose10000").addEventListener('click',function() {
+
+                console.time('测试关闭打开10000次数')
+                for(var i=0; i<10; i++){
+                    console.log(i)
+                    var json = JSON.stringify(spread.toJSON());
+                    spread.fromJSON(JSON.parse(json));
+                }
+                console.timeEnd('测试关闭打开10000次数')
+
+            });
+
+
+            document.getElementById("update10000").addEventListener('click',function() {
+                var  begin = new  Date().getTime();
+                var sheet = spread.getActiveSheet();
+                sheet.getCell(1,0).value("1.2");
+                var  end = new  Date().getTime();
+                console.log(end -begin);
+
+            });
+
+
+
+
+            document.getElementById("table").addEventListener('click',function() {
+
+                var sheet = spread.getActiveSheet();
+                var tableStyle = GC.Spread.Sheets.Tables.TableThemes.light1;
+                var source = [
+                    { LastName: 'Jone', FirstName: 'Nancy',Phone: '(123)555-0100'},
+                    { LastName: 'Tom', FirstName: 'Andrew',Phone: '(123)555-0100'},
+                    { LastName: 'Kotas', FirstName: 'Jan', Phone: '(123)555-0100'}];
+                    var table = sheet.tables.addFromDataSource('table2', 1, 1, source);
+
+
+            })
+
+
+          document.getElementById("endableCopyAndPase").addEventListener('click',function() {
+
+              var sheet = spread.getActiveSheet();
+              //添加sheet页面
+              //spread.addSheet(spread.getSheetCount());
+
+              //设置要显示的sheet页面
+              //spread.setActiveSheetIndex(index);
+
+              var cell = sheet.getCell(1, 0, GC.Spread.Sheets.SheetArea.viewport);
+             //设置背景颜色
+             cell.backColor("Blue");
+
+             sheet.getCell(0,0).value("1");
+             sheet.getCell(1,0).value("2");
+
+             sheet.setFormula(0, 2, "=SUM(A1:B1)");
+             sheet.getCell(0,1).value("1");
+             sheet.getCell(1,1).value("2");
+             sheet.getCell(2,0).value("3");
+             sheet.getCell(2,1).value("3");
+
+
+                 //export
+                 jsonStr = JSON.stringify(sheet.toJSON());
+
+                 alert(jsonStr);
+
+
+                /*    var spread1 = new GC.Spread.Sheets.Workbook(document.getElementById("mm"));
+
+                      var sheet2 = spread1.getActiveSheet();
+                      //import
+                      sheet2.fromJSON(JSON.parse(jsonStr));*/
+
+
+
+
+
+             //instance.copyTo(fromRow, fromColumn, toRow, toColumn, rowCount, columnCount, option);
+             sheet.copyTo(0,0,3,0,3,3,GC.Spread.Sheets.CopyToOptions.all);
+
+
+
+              var tableStyle = new GC.Spread.Sheets.Tables.TableTheme();
+              var thinBorder =
+                      new GC.Spread.Sheets.LineBorder("black",
+                      GC.Spread.Sheets.LineStyle.dotted);
+              tableStyle.wholeTableStyle(new GC.Spread.Sheets.Tables.TableStyle(
+                      "",
+                      "balck",
+                      "10pt arial",
+                      thinBorder,
+                      thinBorder,
+                      thinBorder,
+                      thinBorder,
+                      thinBorder,
+                      thinBorder
+              ));
+              var tableStyleInfo = new GC.Spread.Sheets.Tables.TableStyle(
+                      "",
+                      "balck",
+                      "bold 11pt arial",
+                      thinBorder,
+                      thinBorder,
+                      thinBorder,
+                      thinBorder);
+              tableStyle.headerRowStyle(tableStyleInfo);
+              var table = sheet.tables.add("table1", 1, 1, 5, 5, tableStyle);
+
+            });
+
+
+         document.getElementById("showColumn").addEventListener('click',function() {
+                var verticalPosition = GC.Spread.Sheets.VerticalPosition.top;
+                 var horizontalPosition = GC.Spread.Sheets.HorizontalPosition.left;
+
+                 //sheet.showColumn(3, horizontalPosition);
+                 //sheet.showRow(49, verticalPosition);
+                 // up code and down code work out the same result.
+                 sheet.showCell(49, 3, verticalPosition, horizontalPosition);
+          });
+
+
+
+            document.getElementById("setDataValidator").addEventListener('click',function() {
+
+                   sheet.addSelection(3, 3, 3, 3);
+
+                    sheet.getRange(9, 1, 2, 2).backColor("#D9D9FF");
+                    spread.options.highlightInvalidData = true;
+
+                     //ListValidator
+                     var dv1 = new GC.Spread.Sheets.DataValidation.createListValidator("Fruit,Vegetable,Food");
+                     dv1.inputTitle("Please choose a category:");
+                     dv1.inputMessage("Fruit, Vegetable, Food");
+                     dv1.highlightStyle({
+                         type: GC.Spread.Sheets.DataValidation.HighlightType.dogEar,
+                         color: "gold",
+                         position: GC.Spread.Sheets.DataValidation.HighlightPosition.topRight,
+                     });
+                     for (var i = 0; i < 11; i++) {
+                         sheet.setDataValidator(i, 2, dv1);
+                     }
+
+               });
+
+
+            document.getElementById("hyperLinkCell").addEventListener('click',function() {
+
+                 sheet.setColumnWidth(4, 130); //控制4行的宽度
+
+                 var h = new GC.Spread.Sheets.CellTypes.HyperLink();
+                 //设置超链接的格式
+                 h.text('hyperLinkCell');
+                 h.linkToolTip('This is the link');
+                 h.linkColor('red');
+                 h.visitedLinkColor('blue'); //点击链接手后的颜色
+                 h.activeOnClick(true); //是否激活单元格
+
+                sheet.setCellType(2, 4, h, GC.Spread.Sheets.SheetArea.viewport);
+
+                sheet.getCell(2, 4).textIndent(3);  //控制缩进
+
+                var vAlign = GC.Spread.Sheets.VerticalAlign.bottom; //设置垂直单元格对其方向
+                sheet.getCell(2, 4).vAlign(vAlign);
+
+                var src = "http://baidu.com?page=" + "10";
+
+                //跳转链接
+                sheet.getCell(2, 4, GC.Spread.Sheets.SheetArea.viewport).value(src);
+
+                //设置链接单元格的单击的回调
+               /*
+                 spread.commandManager().register('setSheetTabStyle', {
+                   canUndo: true,
+                   execute: function (context, options, isUndo) {
+                       sheet.name('Hyperlink');
+                       sheet.options.sheetTabColor = 'red';
+                   }
+                }, null, false, false, false, false);
+
+                h.onClickAction(function () {
+                   spread.commandManager().execute({cmd: 'setSheetTabStyle'});
+                });*/
+
+
+            });
+
+
+          document.getElementById("engter").addEventListener('click',function() {
+
+                     //修改默认的下一个单元格为enter键盘
+                    spread.commandManager().register('selectNextControl', GC.Spread.Sheets.Commands.moveToNextCell, GC.Spread.Commands.Key.enter, false, false, false, false);
+                   //以下代码将会在用户点击单元格时立即进入编辑状态。
+                  /*  spread.bind(GC.Spread.Sheets.Events.EnterCell, function (event, data) {
+                                    var sheet = data.sheet;
+                                    sheet.startEdit(false);
+                    });*/
+
+
+                       var cell = sheet.getCell(1, 1, GC.Spread.Sheets.SheetArea.viewport);
+                       //设置背景颜色
+                        cell.backColor("Blue");
+                        //设置字体颜色
+                        cell.foreColor("Red");
+                        cell.value("Color");
+                        //设置边框样式和颜色
+
+                        var cell2 = sheet.getCell(2, 2, GC.Spread.Sheets.SheetArea.viewport);
+                        var ns = GC.Spread.Sheets;
+                        cell2.borderLeft(new ns.LineBorder("gray", ns.LineStyle.double));
+                        cell2.borderTop(new ns.LineBorder("gray", ns.LineStyle.double));
+                        cell2.borderRight(new ns.LineBorder("gray", ns.LineStyle.double));
+                        cell2.borderBottom(new ns.LineBorder("gray", ns.LineStyle.double));
+
+
+                        var cell3 = sheet.getCell(3, 3, GC.Spread.Sheets.SheetArea.viewport);
+                        var ns = GC.Spread.Sheets;
+                        cell3.borderLeft(new ns.LineBorder("red", ns.LineStyle.hair));
+                        cell3.borderTop(new ns.LineBorder("red", ns.LineStyle.hair));
+                        cell3.borderRight(new ns.LineBorder("red", ns.LineStyle.hair));
+                        cell3.borderBottom(new ns.LineBorder("red", ns.LineStyle.hair));
+
+                });
+
+
+            document.getElementById("closeGroupLevel").addEventListener('click',function() {
+                var sheet = spread.getActiveSheet();
+                sheet.showRowOutline(false);
+                sheet.showColumnOutline(false);
+            });
+
+
+            document.getElementById("hiddenColumnGroup").addEventListener('click',function() {
+                var sheet = spread.getActiveSheet();
+                var rgi = sheet.columnOutlines.find(1, 0);
+                if (rgi != null) {
+                    sheet.columnOutlines.expandGroup(rgi, false);
+                }
+                sheet.invalidateLayout();
+                sheet.repaint();
+            });
+
+
+            document.getElementById("opendColumnGroup").addEventListener('click',function() {
+                var sheet = spread.getActiveSheet();
+                var rgi = sheet.columnOutlines.find(1, 0);
+                if (rgi != null) {
+                    sheet.columnOutlines.expandGroup(rgi, true);
+                }
+                sheet.invalidateLayout();
+                sheet.repaint();
+            });
+
+
+            document.getElementById("showAllGroup").addEventListener('click',function() {
+                var sheet = spread.getActiveSheet();
+              /*
+                显示分组头
+                sheet.showRowOutline(true);
+                sheet.showColumnOutline(true);*/
+                sheet.suspendPaint();
+                sheet.rowOutlines.expand(0,true);
+                sheet.resumePaint();
+            });
+
+
+            document.getElementById("hiddenAllGroup").addEventListener('click',function() {
+                var sheet = spread.getActiveSheet();
+             /*
+                隐藏分组头
+                sheet.showRowOutline(false);
+                sheet.showColumnOutline(false);*/
+
+                sheet.suspendPaint();
+                sheet.rowOutlines.expand(0,false);
+                sheet.resumePaint();
+            });
+
+
+
+            document.getElementById("showAllGroup1").addEventListener('click',function() {
+                var sheet = spread.getActiveSheet();
+                sheet.suspendPaint();
+                sheet.rowOutlines.expand(1,true);
+                sheet.resumePaint();
+            });
+
+
+            document.getElementById("hiddenAllGroup1").addEventListener('click',function() {
+                var sheet = spread.getActiveSheet();
+                sheet.suspendPaint();
+                sheet.rowOutlines.expand(1,false);
+                sheet.resumePaint();
+            });
+
+
+
+
+            document.getElementById("zoomFactor").addEventListener('change',function() {
+                var sheet = spread.getActiveSheet(); //为了让导入以后生效，因为sheet对象改变了，必须重新获取sheet
+                if (sheet) {
+                    var zoomFactor = parseInt(this.value);
+                    sheet.zoom(zoomFactor);
+                }
+            });
+
+            document.getElementById("hidRow").addEventListener('click',function() {
+                var sheet = spread.getActiveSheet();
+                if (sheet) {
+                    sheet.setRowVisible(1,false,GC.Spread.Sheets.SheetArea.viewport);
+                    sheet.setColumnVisible(1,false,GC.Spread.Sheets.SheetArea.viewport);
+                }
+            });
+
+            //https://demo.grapecity.com.cn/spreadjs/help/v12/content/webframe.html#SpreadJS~GC.Spread.Sheets.Worksheet~setRowVisible.html
+
+            document.getElementById("showRow").addEventListener('click',function() {
+                var sheet = spread.getActiveSheet();
+                if (sheet) {
+                    sheet.setRowVisible(1,true,GC.Spread.Sheets.SheetArea.viewport);
+                    sheet.setColumnVisible(1,true,GC.Spread.Sheets.SheetArea.viewport);
+                }
+            });
+
+
+
+            // document.getElementById('hidRow').onclick = function() {
+            //     var instance = new GC.Spread.Sheets.Worksheet("Sheet1");
+            //     console.log(instance)
+            //     var returnValue=instance.setRowVisible(1,false,GC.Spread.Sheets.SheetArea.viewport);
+            //     console.log(returnValue);
+            // }
+
+            document.getElementById('loadExcel').onclick = function() {
+                var  begin = new  Date().getTime();
+                var excelFile = document.getElementById("fileDemo").files[0];
+                var password = document.getElementById('password').value;
+                // here is excel IO API
+                excelIo.open(excelFile, function(json) {
+                    console.log(excelFile  + "    1111");
+                  console.log("json:" +JSON.stringify(json));
+
+                    var  workbookObj = json;
+                    spread.fromJSON(workbookObj);
+
+                    var  end = new  Date().getTime();
+                    console.log(end -begin);
+
+
+                    //允许扩展粘贴
+                    spread.options.allowExtendPasteRange = true;
+
+
+
+
+
+                    spread.options.highlightInvalidData = true; //导入的时候加高亮显示
+
+                    //var sheet = spread.getActiveSheet();
+
+                    //console.log(JSON.stringify( sheet.toJSON()));
+                    //导入的时候，需要在每个sheet加上校验
+
+                    var sheetCount = spread.getSheetCount();
+                    // console.log(sheetCount); //获取
+
+                    for(var j=0; j<sheetCount; j++) {
+
+                        var sheet = spread.getSheet(j);
+                        sheet.bind(GC.Spread.Sheets.Events.ValidationError, function(e, args) {
+                            console.log(args);
+                            // 判断是否展示错误信息
+                            if (args.validator.showErrorMessage()) {
+                                // 选择框，选确定后重新输入，选取消可以强制执行
+                                // alert("张三好");
+                                console.log(args.validator.errorMessage());
+
+                                if(args.validator.errorMessage() !=null && args.validator.errorMessage().length >0 ){
+                                    alert(args.validator.errorMessage());
+                                }
+
+                                // if (confirm(args.validator.errorMessage())) {
+                                //      args.validationResult = GC.Spread.Sheets.DataValidation.DataValidationResult.retry;
+                                //  } else {
+                                //      args.validationResult = GC.Spread.Sheets.DataValidation.DataValidationResult.forceApply;
+                                //  }
+                            }
+                        });
+
+                    }
+
+
+
+
+
+
+                }, function(e) {
+                    // process error
+                    alert(e.errorMessage);
+                    if (e.errorCode === 2 /*noPassword*/ || e.errorCode === 3 /*invalidPassword*/ ) {
+                        document.getElementById('password').onselect = null;
+                    }
+                }, {
+                    password: password
+                });
+            };
+
+
+
+            document.getElementById('saveExcel').onclick = function() {
+                spread.options.highlightInvalidData = true;
+
+                var fileName = document.getElementById('exportFileName').value;
+                var password = document.getElementById('password').value;
+                if (fileName.substr(-5, 5) !== '.xlsx') {
+                    fileName += '.xlsx';
+                }
+
+                var json = spread.toJSON();
+
+                // here is excel IO API
+                excelIo.save(json, function(blob) {
+                    saveAs(blob, fileName);
+                }, function(e) {
+                    // process error
+                    console.log(e);
+                }, {
+                    password: password
+                });
+
+            };
+        };
+    </script>
+</body>
+
+</html>
