@@ -68,7 +68,8 @@ $(document).ready(function () {
             if (sheet.hasPendingChanges(row, col)) {
                 var dirtyDataArray = sheet.getDirtyCells(row, col);
                 if (dirtyDataArray.length > 0) {
-                    appendResult(getChangedCellData(dirtyDataArray[0]));
+                    console.log("1111");
+                   // appendResult(getChangedCellData(dirtyDataArray[0]));
                 }
             }
         });
