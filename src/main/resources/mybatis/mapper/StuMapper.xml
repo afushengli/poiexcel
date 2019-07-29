@@ -13,4 +13,19 @@
 
 
 
+
+    <update id="updatebyVer" parameterType="com.fsl.poiexcel.bean.Student">
+        update  student
+        <trim prefix="set" suffixOverrides=",">
+            <if test="stuName!=null">stu_name = #{stuName},</if>
+            <if test="stuAge!=null">stu_age = #{stuAge},</if>
+            <if test="stuSchoolName!=null">stu_school_name =#{stuSchoolName},</if>
+            <if test="stuClassName!=null">stu_class_name=#{stuClassName},</if>
+            <if test="ver!=null">ver=#{ver} + 1,</if>
+        </trim>
+       where id = #{id} and ver = #{ver}
+     </update>
+
+
+
 </mapper>

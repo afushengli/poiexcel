@@ -38,6 +38,18 @@
     <div class = "button1">
         <button id="prePage" onclick="deleteRow()">删除</button>
     </div>
+
+    <div class = "button1">
+        <button id="export" onclick="export1()">导出excel</button>
+    </div>
+    <input id="exportFileName" value="export.xlsx" type="hidden">
+    <input type="hidden" id="password">
+
+    <div class="button1">
+        <input type="file" id="fileDemo" class="input">
+        <input type="button" id="loadExcel" value="import" class="button"  onclick="import1()">
+    </div>
+
   <!--
     <div class = "button1">
         <button id="prePage" onclick="prePage(false)">上一页</button>

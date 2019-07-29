@@ -27,6 +27,8 @@ public class Student implements Serializable {
     private String stuSchoolName;
     @Column(name="stu_class_name")
     private String stuClassName;
+    @Column(name="ver")
+    private int ver;
 
     public Long getId() {
         return id;
@@ -76,8 +78,16 @@ public class Student implements Serializable {
         this.stuClassName = stuClassName;
     }
 
+    public int getVer() {
+        return ver;
+    }
+
+    public void setVer(int ver) {
+        this.ver = ver;
+    }
+
     @Override
     public String toString() {
-        return "Student{" + "id=" + id + ", stuName='" + stuName + '\'' + ", stuSex=" + stuSex + ", stuAge=" + stuAge + ", stuSchoolName='" + stuSchoolName + '\'' + ", stuClassName='" + stuClassName + '\'' + '}';
+        return "Student{" + "id=" + id + ", stuName='" + stuName + '\'' + ", stuSex=" + stuSex + ", stuAge=" + stuAge + ", stuSchoolName='" + stuSchoolName + '\'' + ", stuClassName='" + stuClassName + '\'' + ", ver=" + ver + '}';
     }
 }

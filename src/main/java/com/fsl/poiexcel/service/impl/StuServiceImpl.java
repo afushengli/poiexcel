@@ -27,14 +27,21 @@ public class StuServiceImpl   implements StuService {
         return stuMapper.selectAll();
     }
 
+
+    public  Student   getStu (Long id){
+        return stuMapper.selectByPrimaryKey(id);
+    }
+
     public int update (List<Student> stus) {
         int sum = 0;
 
         for(Student stu : stus){
-           int  i=  stuMapper.updateByPrimaryKey(stu);
+            int  i=  stuMapper.updatebyVer(stu);
             sum += i;
         }
-         return sum;
+        return sum;
+
+
     }
 
 

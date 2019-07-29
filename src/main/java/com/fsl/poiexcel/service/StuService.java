@@ -17,6 +17,8 @@ public interface StuService {
 
     public int update (List<Student> stus);
 
+    public Student getStu (Long id);
+
     public Page<Student> queryStudentByPage(int pageIndex, int pageSize);
 
  }

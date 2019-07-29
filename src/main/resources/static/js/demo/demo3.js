@@ -14,6 +14,7 @@ var cloumn;
 var rowCount;
 var columnCount;
 var cell;
+var excelIo ;
 
 $(document).ready(function () {
 
@@ -22,6 +23,8 @@ $(document).ready(function () {
 	//spread.fromJSON(JSON.parse(test1));
 
     SheetArea = GC.Spread.Sheets.SheetArea;
+
+    excelIo = new GC.Spread.Excel.IO();
    /* sheet = spread.getActiveSheet();
 
     sheet.getCell(0,0).value("1");*/
@@ -35,6 +38,87 @@ $(document).ready(function () {
 
 
 });
+
+
+function export1() {
+
+    var fileName = document.getElementById('exportFileName').value;
+    if (fileName.substr(-5, 5) !== '.xlsx') {
+        fileName += '.xlsx';
+    }
+
+    var json = spread.toJSON();
+
+    // here is excel IO API
+    excelIo.save(json, function(blob) {
+        saveAs(blob, fileName);
+    }, function(e) {
+        // process error
+        console.log(e);
+    }, {
+        //password: password
+    });
+
+}
+
+
+function import1() {
+    var  begin = new  Date().getTime();
+    var excelFile = document.getElementById("fileDemo").files[0];
+    var password = document.getElementById('password').value;
+    // here is excel IO API
+    excelIo.open(excelFile, function(json) {
+        console.log(excelFile  + "    1111");
+        console.log("json:" +JSON.stringify(json));
+
+        var  workbookObj = json;
+        spread.fromJSON(workbookObj);
+
+        var  end = new  Date().getTime();
+        console.log(end -begin);
+
+
+        //允许扩展粘贴
+        spread.options.allowExtendPasteRange = true;
+
+
+
+
+
+        spread.options.highlightInvalidData = true; //导入的时候加高亮显示
+
+        //var sheet = spread.getActiveSheet();
+
+        //console.log(JSON.stringify( sheet.toJSON()));
+        //导入的时候，需要在每个sheet加上校验
+
+        var sheetCount = spread.getSheetCount();
+        // console.log(sheetCount); //获取
+
+        for(var j=0; j<sheetCount; j++) {
+            var sheet = spread.getSheet(j);
+            sheet.bind(GC.Spread.Sheets.Events.ValidationError, function(e, args) {
+                console.log(args);
+                // 判断是否展示错误信息
+                if (args.validator.showErrorMessage()) {
+                    // 选择框，选确定后重新输入，选取消可以强制执行
+                    console.log(args.validator.errorMessage());
+                    if(args.validator.errorMessage() !=null && args.validator.errorMessage().length >0 ){
+                        alert(args.validator.errorMessage());
+                    }
+                }
+            });
+        }
+    }, function(e) {
+        // process error
+        alert(e.errorMessage);
+        if (e.errorCode === 2 /*noPassword*/ || e.errorCode === 3 /*invalidPassword*/ ) {
+            document.getElementById('password').onselect = null;
+        }
+    }, {
+        password: password
+    });
+}
 
 function addThreeRow(){
     sheet = spread.getActiveSheet();
@@ -179,11 +263,23 @@ function addFourTitleRow() {
         sheet.copyTo(row,0,row+1,0,1,8,GC.Spread.Sheets.CopyToOptions.all);
     }else if(value==3.1){
         var preTreeLevel = row;
+        var flag =true;
         while(true){
-            preTreeLevel--;
-            if(sheet.getValue(preTreeLevel, 7)==4){
-                sheet.copyTo(preTreeLevel,0,row+1,0,1,8,GC.Spread.Sheets.CopyToOptions.all);
-                break;
+            if(flag){
+                preTreeLevel--;
+                if(preTreeLevel ==0 ){
+                    flag = false;
+                }
+                if(sheet.getValue(preTreeLevel, 7)==4){
+                    sheet.copyTo(preTreeLevel,0,row+1,0,1,8,GC.Spread.Sheets.CopyToOptions.all);
+                    break;
+                }
+            }else{
+                preTreeLevel++;
+                if(sheet.getValue(preTreeLevel, 7)==4){
+                    sheet.copyTo(preTreeLevel,0,row+1,0,1,8,GC.Spread.Sheets.CopyToOptions.all);
+                    break;
+                }
             }
         }
     }
@@ -222,6 +318,9 @@ function addFourTitleRow() {
                 if(sheet.hasFormula(parentLevelRow, 5)){    //是不是有公式
                     setFormula(parentLevelRow,5);
                 }
+                break;
+            } else if(mm == 2){
+                //设置公式
                 break;
             }
         }
@@ -331,6 +430,9 @@ function abeleEdit(){
 
     spread.resumePaint();
 }
+
+
+
 
 
 

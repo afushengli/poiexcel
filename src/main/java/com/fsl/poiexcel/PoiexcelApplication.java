@@ -1,20 +1,26 @@
 package com.fsl.poiexcel;
 
 
+import com.fsl.poiexcel.excepetion.MyLocaleResolver;
 import com.fsl.poiexcel.interceptor.AccessLimitInterceptor;
 import com.fsl.poiexcel.interceptor.ApiIdempotentInterceptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import tk.mybatis.spring.annotation.MapperScan;
 
 
 @SpringBootApplication
+@EnableTransactionManagement
+@EnableScheduling // 开启定时任务
 @MapperScan(basePackages = "com.fsl.poiexcel.mapper")
 public class PoiexcelApplication extends WebMvcConfigurerAdapter {
 
@@ -23,10 +29,12 @@ public class PoiexcelApplication extends WebMvcConfigurerAdapter {
     }
 
 
-    /**
-     * 跨域
-     * @return
-     */
+    //激活LocaleResolver
+    @Bean
+    public LocaleResolver localeResolver(){
+        return new MyLocaleResolver();
+    }
+
     @Bean
     public CorsFilter corsFilter() {
         final UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
@@ -58,6 +66,7 @@ public class PoiexcelApplication extends WebMvcConfigurerAdapter {
     public AccessLimitInterceptor accessLimitInterceptor() {
         return new AccessLimitInterceptor();
     }
+
 
 
 }

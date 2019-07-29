@@ -34,6 +34,42 @@ public class TokenServiceImpl implements TokenService {
         return ServerResponse.success(token.toString());
     }
 
+    public  ServerResponse edit(int id){
+
+        StrBuilder key = new StrBuilder();
+        key.append(Constant.Redis.TOKEN_PREFIX).append(id);
+
+
+
+        if (!jedisUtil.exists(key.toString())) {
+            jedisUtil.set(key.toString(), key.toString());
+
+        }else{
+            throw new ServiceException(ResponseCode.REPETITIVE_OPERATION.getMsg());
+        }
+
+        return ServerResponse.success(key.toString());
+
+    }
+
+
+    public ServerResponse save(int id){
+
+        StrBuilder key = new StrBuilder();
+        key.append(Constant.Redis.TOKEN_PREFIX).append(id);
+
+
+
+        Long del = jedisUtil.del(key.toString());
+        if (del <= 0) {
+            throw new ServiceException(ResponseCode.REPETITIVE_OPERATION.getMsg());
+        }
+
+        return ServerResponse.success("保存成功:"+del );
+
+
+    }
+
     @Override
     public void checkToken(HttpServletRequest request) {
         String token = request.getHeader(TOKEN_NAME);
@@ -52,6 +88,8 @@ public class TokenServiceImpl implements TokenService {
        if (del <= 0) {
             throw new ServiceException(ResponseCode.REPETITIVE_OPERATION.getMsg());
         }
+
+
     }
 
 }

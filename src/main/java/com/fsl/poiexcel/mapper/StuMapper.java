@@ -19,4 +19,7 @@ public interface StuMapper extends Mapper<Student> {
 
     public List<Student> getStudentByPage(Map<String,Object> map);
 
+
+    public  int updatebyVer(Student stu);
+
 }

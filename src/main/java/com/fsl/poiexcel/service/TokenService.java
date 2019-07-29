@@ -10,4 +10,10 @@ public interface TokenService {
 
     void checkToken(HttpServletRequest request);
 
+
+    ServerResponse edit(int id);
+
+    ServerResponse save(int id);
+
+
 }

@@ -56,6 +56,7 @@ public class ServerResponse implements Serializable{
         return new ServerResponse(ResponseCode.ERROR.getCode(), msg, data);
     }
 
+
     public Integer getStatus() {
         return status;
     }

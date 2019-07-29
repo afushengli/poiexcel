@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fsl.poiexcel.mapper.OperatelockMapper">
+
+
+
+
+    <delete id="batchDeletebyid" parameterType="Map">
+        DELETE FROM operatelock WHERE id IN
+        <foreach collection="idList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+
+    <update id="batchUpdatebyid" parameterType="Map">
+
+        UPDATE operatelock SET update_time = #{updateTime} WHERE id IN
+        <foreach collection="idList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+
+</mapper>

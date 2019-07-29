@@ -2,7 +2,9 @@ package com.fsl.poiexcel.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fsl.poiexcel.bean.Student;
+import com.fsl.poiexcel.common.ServerResponse;
 import com.fsl.poiexcel.service.StuService;
+import com.fsl.poiexcel.service.TokenService;
 import com.fsl.poiexcel.util.DocUtil;
 import com.fsl.poiexcel.util.ExcelUtil;
 import com.fsl.poiexcel.util.Page;
@@ -15,16 +17,15 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,11 +47,57 @@ public class ExcelController1 {
     private StuService stuService;
 
 
+    @Autowired
+    private TokenService tokenService;
+
+
+    @PostMapping(value = "/login")
+    @ResponseBody
+    public ServerResponse login(@RequestParam("username") String username,
+                        @RequestParam("password") String password,
+                        Map<String,Object> map, HttpSession session){
+        if(!StringUtils.isEmpty(username) && "123456".equals(password)){
+            //登陆成功，防止表单重复提交，可以重定向到主页
+            session.setAttribute("loginUser",username);
+            return  ServerResponse.success("登陆成功");
+            //return "redirect:/main.html";
+        }else{
+            //登陆失败
+
+            map.put("msg","用户名密码错误");
+            return  ServerResponse.error("登录失败");
+
+           // return  "login";
+        }
+
+    }
+
+
+
+
+
+
  /*   @RequestMapping("/queryPage")
     public PageInfo<City> getAll(City city) {
         List<City> countryList = cityService.getAll(city);
         return new PageInfo<City>(countryList);
     }*/
+
+   //编辑
+    @RequestMapping("/edit")
+    @ResponseBody
+    public ServerResponse edit(@RequestParam int id) {
+        return  tokenService.edit(id);
+    }
+
+
+    //保存
+    @RequestMapping("/save")
+    @ResponseBody
+    public ServerResponse save(@RequestParam int id) {
+        return  tokenService.save(id);
+    }
+
 
 
 
@@ -82,6 +129,15 @@ public class ExcelController1 {
         return students;
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/getStu")
+    public  ResponseEntity<Student>   getStudent(@RequestParam Long id){
+        Student  student =stuService.getStu(id);
+        return ResponseEntity.ok().body(student);
+    }
+
+
+
 
     //后台的导入
     @RequestMapping(value = "/downLoadWork", method = RequestMethod.GET)
@@ -95,6 +151,42 @@ public class ExcelController1 {
         Resource resource = new ClassPathResource("public");
         String realPath=  resource.getFile().getAbsolutePath();
         File importFile = new File(realPath, "work.xlsx");
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(importFile);
+            int len = 0;
+            byte[] buf = new byte[size];
+            os = response.getOutputStream();
+            while((len=fis.read(buf))!=-1){
+                os.write(buf, 0, len);
+                os.flush();
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally{
+            try {
+                fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+
+    //后台的导入的带文件名的excel
+    @RequestMapping(value = "/downFileFromBack")
+    @ResponseBody
+    public void downFileFromBack(HttpServletRequest request,
+                         HttpServletResponse response, Model model) throws IOException {
+        int size = 4096;
+        OutputStream os = null;
+        //  File importFile = new File("d:\\test.xlsx");
+           String fileName = request.getParameter("fileName");
+        Resource resource = new ClassPathResource("public");
+        String realPath=  resource.getFile().getAbsolutePath();
+        File importFile = new File(realPath, fileName);
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(importFile);

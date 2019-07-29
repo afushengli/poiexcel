@@ -48,7 +48,7 @@ function importData(){
     //var excelFilePath = 'resources/Excel/importExcel.xlsx';
     console.time("测试后台导入excel");
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', "/user/downLoad.do", true);
+    xhr.open('GET', "/user/downLoad", true);
     xhr.responseType = 'blob';   
     xhr.onload = function(e) {
 
