@@ -2,6 +2,9 @@ package com.fsl.poiexcel.common;
 
 public class Constant {
 
+
+    public static final  Integer EXPIRE_DELETE_TIME = 10 * 60;// 过期删除时间
+
     public interface Redis {
         String OK = "OK";
         Integer EXPIRE_TIME_MINUTE = 60;// 过期时间, 60s, 一分钟

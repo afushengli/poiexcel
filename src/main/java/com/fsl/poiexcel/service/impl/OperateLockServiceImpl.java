@@ -11,6 +11,8 @@ import com.fsl.poiexcel.service.OperateLockService;
 import com.fsl.poiexcel.service.StuService;
 import com.fsl.poiexcel.util.JedisUtil;
 import org.apache.commons.lang3.text.StrBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -30,6 +32,8 @@ import java.util.stream.Collectors;
 @Service
 public class OperateLockServiceImpl  implements OperateLockService {
 
+    Logger logger = LoggerFactory.getLogger(OperateLockServiceImpl.class);
+
     @Autowired
     private OperatelockMapper operatelockMapper;
 
@@ -47,6 +51,9 @@ public class OperateLockServiceImpl  implements OperateLockService {
         example.createCriteria().andEqualTo("fileName",fileName);//.andEqualTo("id","3");
         List <Operatelock>   list = operatelockMapper.selectByExample(example);
 
+
+        logger.info("心跳操作----更新时间 +++" +  list   + "    " + fileName);
+
         if(!CollectionUtils.isEmpty(list)){
             Map map =new HashMap();
             List<Long> idList =list.stream().map(op->op.getId()).collect(Collectors.toList());
@@ -55,6 +62,8 @@ public class OperateLockServiceImpl  implements OperateLockService {
             int count = operatelockMapper.batchUpdatebyid(map);
         }
 
+
+        logger.info("心跳操作----更新时间");
         return ServerResponse.success("更新成功");
     }
 

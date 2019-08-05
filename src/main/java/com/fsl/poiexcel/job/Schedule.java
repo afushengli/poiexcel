@@ -6,10 +6,13 @@ import com.fsl.poiexcel.mapper.OperatelockMapper;
 import com.fsl.poiexcel.util.JedisUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.text.StrBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +26,7 @@ import java.util.stream.Collectors;
  */
 @Component
 public class Schedule {
+    private Logger logger = LoggerFactory.getLogger(Schedule.class);
 
     /**
      * https://www.cnblogs.com/mmzs/p/10161936.html
@@ -40,9 +44,9 @@ public class Schedule {
 
 
     //定时任务 0 */1 * * * ? 每分钟执行一次
-    @Scheduled(cron="5 * * * * ?")
+    @Scheduled(cron="10 * * * * ?")
     public void scheduledMethod(){
-       System.out.println("定时器被触发"+new Date());
+        logger.info("定时器被触发开始:"+new Date());
 
 
 
@@ -57,8 +61,15 @@ public class Schedule {
        List<Operatelock> list = operatelockMapper.selectAll();
 
        if(!CollectionUtils.isEmpty(list)){
+
+           for(Operatelock o : list){
+               SimpleDateFormat simpleDateFormat =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+               logger.info("当前时间:" +simpleDateFormat.format( new Date())+"更新时间："+ simpleDateFormat.format(o.getUpdateTime()));
+           }
+
+
            long time = new Date().getTime();
-           List  <Operatelock>  opList =  list.stream().filter((o) -> (time -o.getUpdateTime().getTime() > 1000*10 )).collect(Collectors.toList());
+           List  <Operatelock>  opList =  list.stream().filter((o) -> (time -o.getUpdateTime().getTime() > Constant.EXPIRE_DELETE_TIME )).collect(Collectors.toList());
 
            List  <Long>  idList = opList.stream().map(o->o.getId()).collect(Collectors.toList());
            List <String> fileList = opList.stream().map(o->o.getFileName()).collect(Collectors.toList());
@@ -80,6 +91,8 @@ public class Schedule {
                operatelockMapper.batchDeletebyid(map);
            }
        }
+        logger.info("定时器被触发结束:"+new Date());
+
 
 
     }

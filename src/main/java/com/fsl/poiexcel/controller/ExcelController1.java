@@ -202,7 +202,10 @@ public class ExcelController1 {
             e.printStackTrace();
         } finally{
             try {
-                fis.close();
+                if(fis !=null){
+                    fis.close();
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -237,7 +240,9 @@ public class ExcelController1 {
             e.printStackTrace();
         } finally{
             try {
-                fis.close();
+                if(fis !=null){
+                    fis.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

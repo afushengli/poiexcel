@@ -53,9 +53,15 @@ public class OperatelockController {
     @RequestMapping("/sendHearteat")
     @ResponseBody
     public ServerResponse  sendHearteat(@RequestParam String fileName) {
+
+        logger.info("心跳接受文件名称:"+ fileName);
+        String files = fileName.substring(0,fileName.indexOf("."));
+        fileName = files +".xlsx" ;
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         Date date = new Date();
+        logger.info("心跳接受成功-----------");
         return operateLockService.updateTime(fileName,date);
 
      /*   try {
@@ -100,6 +106,8 @@ public class OperatelockController {
         MultipartFile file = fileMap.get("file");
         String fileName = file.getOriginalFilename();
 
+        logger.info("自动保存文件名称:"+ fileName);
+
         Resource resource = new ClassPathResource("public");
         String realPath=  resource.getFile().getAbsolutePath();
         File newfile  = new File(realPath, fileName);
@@ -127,7 +135,7 @@ public class OperatelockController {
                 return  ServerResponse.error("保存失败,不是同一个人进行的保存");
             }
         }else{
-            return ServerResponse.error("没有拿到锁，不能保存");
+            return ServerResponse.error("没有拿到锁，不能保存1111");
         }
 
     }
@@ -135,6 +143,9 @@ public class OperatelockController {
     @RequestMapping(value="/saveExport",method=RequestMethod.POST)
     @ResponseBody
     public ServerResponse saveExport(HttpServletRequest request) throws IOException, ServletException {
+
+
+
 
         String user = (String) request.getSession().getAttribute("loginUser");
         logger.info("手动或者长时间不操作的保存---------");
@@ -148,6 +159,7 @@ public class OperatelockController {
         Map<String,MultipartFile> fileMap = multipartRequest.getFileMap();
         MultipartFile file = fileMap.get("file");
         String fileName = file.getOriginalFilename();
+        logger.info("手动或者长时间不操作的保存:"+ fileName);
 
         Resource resource = new ClassPathResource("public");
         String realPath=  resource.getFile().getAbsolutePath();
@@ -178,7 +190,7 @@ public class OperatelockController {
                 return  ServerResponse.error("保存失败,不是同一个人进行的保存");
             }
         }else{
-            return ServerResponse.error("没有拿到锁，不能保存");
+            return ServerResponse.error("没有拿到锁，不能保存22222222");
         }
     }
 
@@ -191,16 +203,21 @@ public class OperatelockController {
     public ServerResponse edit(@RequestParam String fileName,@RequestParam String sheetName,HttpSession session) {
         String user = (String)session.getAttribute("loginUser");
 
+         String files = fileName.substring(0,fileName.indexOf("."));
+        fileName = files +".xlsx" ;
+
+
         StrBuilder key = new StrBuilder();
         key.append(Constant.Redis.TOKEN_PREFIX).append(fileName);
+
+
 
         if (jedisUtil.exists(key.toString())) {
 
             String userName = jedisUtil.get(key.toString());
 
             if(user.equals(userName)){
-                Date date = new Date();
-                return operateLockService.updateTime(fileName,date);
+                return  ServerResponse.error("同一个人不能在不同的窗口修改",userName);
             }else{
                 return  ServerResponse.error("已经有人在修改，不能修改",userName);
             }
