@@ -2,9 +2,11 @@ package com.fsl.poiexcel.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fsl.poiexcel.bean.Student;
+import com.fsl.poiexcel.bean.User;
 import com.fsl.poiexcel.common.ServerResponse;
 import com.fsl.poiexcel.service.StuService;
 import com.fsl.poiexcel.service.TokenService;
+import com.fsl.poiexcel.service.UserService;
 import com.fsl.poiexcel.util.DocUtil;
 import com.fsl.poiexcel.util.ExcelUtil;
 import com.fsl.poiexcel.util.Page;
@@ -17,6 +19,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,15 +54,29 @@ public class ExcelController1 {
     private TokenService tokenService;
 
 
+    @Autowired
+    private UserService userService;
+
+
+
     @PostMapping(value = "/login")
     @ResponseBody
     public ServerResponse login(@RequestParam("username") String username,
                         @RequestParam("password") String password,
                         Map<String,Object> map, HttpSession session){
-        if(!StringUtils.isEmpty(username) && "123456".equals(password)){
-            //登陆成功，防止表单重复提交，可以重定向到主页
-            session.setAttribute("loginUser",username);
-            return  ServerResponse.success("登陆成功");
+        if(!StringUtils.isEmpty(username) && !StringUtils.isEmpty(password)){
+
+            List<User> list =userService.login(username,password);
+
+            if(!CollectionUtils.isEmpty(list) && list.size()>0){
+                //登陆成功，防止表单重复提交，可以重定向到主页
+                session.setAttribute("loginUser",list.get(0).getUserName());
+                session.setAttribute("userId",list.get(0).getUserId());
+
+                return  ServerResponse.success("登陆成功",list);
+            }else{
+                return  ServerResponse.error("登录失败");
+            }
             //return "redirect:/main.html";
         }else{
             //登陆失败
