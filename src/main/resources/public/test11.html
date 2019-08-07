@@ -9,21 +9,38 @@
 </head>
 
 <body>
+<div id="test-id"> </div>
 <button id="btn">同意</button>
 <script src="http://code.jquery.com/jquery-1.8.2.min.js" type="text/javascript"></script>
 <script>
     $('#btn').attr("disabled", true);
+    var idValue = '';
     $.ajax({
         type: 'get',
         url: '/message/findUserOpreate',
         success: function (data) {
             if (data.status === 0) {
+                console.log(data.data[0].id);
+                idValue = data.data[0].id;
+                $("#test-id").html(data.data[0].docPath)
                 $('#btn').attr("disabled", false);
             }
         }
     })
     $('#btn').click(function () {
-
+        console.log(idValue);
+        $.ajax({
+            type: 'get',
+            url: '/message/opreate',
+            data:{ id: idValue, operateStatus: "AGREE" },
+            success: function (data) {
+                if (data.status === 0) {
+                    alert("审批成功");
+                }else {
+                    alert("审批失败");
+                }
+            }
+        })
     })
 </script>
 </body>
