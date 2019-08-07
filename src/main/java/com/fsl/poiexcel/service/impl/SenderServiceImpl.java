@@ -47,9 +47,9 @@ public class SenderServiceImpl implements SenderService{
 
         Message message =  new Message();
         message.setDocPath(operateMessage.getDocPath());
-        message.setStepID(operateMessage.getStepID());
+        message.setStepID(operateMessage.getStepId());
         message.setUserID((String)session.getAttribute("userId"));
-        message.setInnerID(operateMessage.getInnerID());
+        message.setInnerID(operateMessage.getInnerId());
         list.add(message);
 
 
@@ -80,10 +80,10 @@ public class SenderServiceImpl implements SenderService{
                 for(Message message1:listM) {
                     if("ADUIT".equals(message1.getInnerID())){
                         OperateMessage add = new OperateMessage();
-                        add.setUserID(message1.getUserID());
+                        add.setUserId(message1.getUserID());
                         add.setDocPath(message1.getDocPath());
-                        add.setInnerID(message1.getInnerID());
-                        add.setStepID(message1.getStepID());
+                        add.setInnerId(message1.getInnerID());
+                        add.setStepId(message1.getStepID());
                         operateMessageService.addOperateMessage(add);
                     }
                 }
@@ -94,7 +94,7 @@ public class SenderServiceImpl implements SenderService{
         } catch (IOException | TimeoutException | InterruptedException e) {
             e.printStackTrace();
             return ServerResponse.error("操作失败");
-        } finally {
+        } /*finally {
             if (fibonacciRpc!= null) {
                 try {
                     fibonacciRpc.close();
@@ -102,7 +102,7 @@ public class SenderServiceImpl implements SenderService{
                     e.printStackTrace();
                 }
             }
-        }
+        }*/
     }
 
 
