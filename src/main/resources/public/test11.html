@@ -35,9 +35,9 @@
             data:{ id: idValue, operateStatus: "AGREE" },
             success: function (data) {
                 if (data.status === 0) {
-                    alert("审批成功");
+                    alert(data.msg);
                 }else {
-                    alert("审批失败");
+                    alert(data.msg);
                 }
             }
         })
