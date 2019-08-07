@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+<button id="btn">同意</button>
+<script src="http://code.jquery.com/jquery-1.8.2.min.js" type="text/javascript"></script>
+<script>
+    $('#btn').attr("disabled", true);
+    $.ajax({
+        type: 'get',
+        url: '/message/findUserOpreate',
+        success: function (data) {
+            if (data.status === 0) {
+                $('#btn').attr("disabled", false);
+            }
+        }
+    })
+    $('#btn').click(function () {
+
+    })
+</script>
+</body>
+
+</html>
