@@ -34,9 +34,9 @@ public class OpreateController {
     @ResponseBody
     public ServerResponse findUserOpreate(HttpSession session) {
 
-        String userId = (String)session.getAttribute("userId");
+        Integer userId = (Integer)session.getAttribute("userId");
 
-        return operateMessageService.findOPerateByUserId(userId);
+        return operateMessageService.findOPerateByUserId(String.valueOf(userId));
     }
 
 
@@ -50,7 +50,7 @@ public class OpreateController {
 
 
         OperateMessage operateMessage =  operateMessageService.findOPerateById(Integer.valueOf(id));
-        operateMessage.setInnerID(operateStatus);
+        operateMessage.setInnerId(operateStatus);
 
 
         //发送操作

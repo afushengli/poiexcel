@@ -9,7 +9,10 @@ import org.springframework.amqp.rabbit.support.CorrelationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RunWith(SpringRunner.class)
@@ -21,6 +24,17 @@ public class PoiexcelApplicationTests {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+
+    @Test
+    public  void testArr(){
+
+        List<String> list = new ArrayList<>();
+        log.info("4444444444444");
+
+        log.info(CollectionUtils.isEmpty(list)  +"");
+
+    }
 
     @Test
     public  void testMq(){

@@ -14,4 +14,6 @@ public interface OperateMessageService {
     ServerResponse findOPerateByUserId(String userId);
 
     OperateMessage findOPerateById(Integer id);
+
+    public  int deleteByDocPath(String docPath);
 }

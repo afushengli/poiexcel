@@ -12,9 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
@@ -40,70 +41,85 @@ public class SenderServiceImpl implements SenderService{
 
         log.info("开始发送消息");
 
-        OperateMessageJson operateMessageJson = new OperateMessageJson();
-        operateMessageJson.setCode(1);
-        operateMessageJson.setMessage("操作成功");
-        List <Message> list= new ArrayList();
 
-        Message message =  new Message();
-        message.setDocPath(operateMessage.getDocPath());
-        message.setStepID(operateMessage.getStepId());
-        message.setUserID((String)session.getAttribute("userId"));
-        message.setInnerID(operateMessage.getInnerId());
-        list.add(message);
+        Message message1 =  new Message();
+        message1.setDocPath(operateMessage.getDocPath());
+        message1.setStepID(operateMessage.getStepId());
+        message1.setUserID(String.valueOf(session.getAttribute("userId")));
+        message1.setInnerID(operateMessage.getInnerId());
 
 
+        return sendMQMessage(operateMessage,message1);
 
+
+    }
+
+
+    public ServerResponse sendMQMessage(OperateMessage operateMessage,Message message) {
 
         RPCClient fibonacciRpc = null;
         String response = null;
         try {
+
+
+
             fibonacciRpc = new RPCClient();
-            String json = JSON.toJSONString(operateMessageJson);
+            String json = JSON.toJSONString(message);
 
-            log.info("发送mq消息:"+ json);
+            log.info("发送mq消息:" + json);
             response = fibonacciRpc.call(json);
-            System.out.println("接收到的node返回的数据" + response );
-
-
-            Object repJson = JSON.parseObject(response,OperateMessageJson.class);
-
-            OperateMessageJson   repResJSON  = (OperateMessageJson)repJson;
+            System.out.println("接收到的node返回的数据" + response);
 
 
 
-            if(repResJSON.getCode()==1){
+
+            Object repJson = JSON.parseObject(response, OperateMessageJson.class);
+
+            OperateMessageJson repResJSON = (OperateMessageJson) repJson;
+
+            if (repResJSON.getCode() == 1) {
                 //删除数据
                 operateMessageService.DeleteById(operateMessage);
-                List<Message> listM  = repResJSON.getData();
+                List<Message> listM = repResJSON.getData();
 
-                for(Message message1:listM) {
-                    if("ADUIT".equals(message1.getInnerID())){
+                if (!CollectionUtils.isEmpty(listM)) {  //处理并发操作
+                    for (Message message1 : listM) {
                         OperateMessage add = new OperateMessage();
-                        add.setUserId(message1.getUserID());
-                        add.setDocPath(message1.getDocPath());
-                        add.setInnerId(message1.getInnerID());
-                        add.setStepId(message1.getStepID());
-                        operateMessageService.addOperateMessage(add);
-                    }
-                }
-                return ServerResponse.error("操作成功");
-            }else{
-                return ServerResponse.error("操作失败");
+
+                        if("REJECT" .equals(message.getInnerID()) || "CLOSE".equals(message.getInnerID())){
+                            operateMessageService.deleteByDocPath(message1.getDocPath());
+                        }
+
+                        if ("ADUIT".equals(message1.getInnerID()) || "FINAL".equals(message1.getInnerID())) {
+                            add.setUserId(message1.getUserID());
+                            add.setDocPath(operateMessage.getDocPath());  // node不给传输了
+                            add.setInnerId(message1.getInnerID());
+                            add.setStepId(message1.getStepID());
+                            operateMessageService.addOperateMessage(add);
+                        } else if ("REJECT".equals(message1.getInnerID())) {
+                            add.setUserId(message1.getUserID());
+                            add.setDocPath(operateMessage.getDocPath());  // node不给传输了
+                            add.setInnerId(message1.getInnerID());
+                            add.setStepId(message1.getStepID());
+                            operateMessageService.addOperateMessage(add);
+                        } else if ("COPY".equals(message1.getInnerID())) {
+                            Message copy = listM.get(0);
+                            copy.setDocPath(operateMessage.getDocPath());
+                            sendMQMessage(operateMessage, copy);
+                            //现在  close  不做特殊处理
+                        }
+                     }
+                  }
+                return ServerResponse.success("操作成功");
+            } else {
+                return ServerResponse.error(repResJSON.getMessage());
             }
-        } catch (IOException | TimeoutException | InterruptedException e) {
+        } catch(IOException | TimeoutException | InterruptedException e){
             e.printStackTrace();
             return ServerResponse.error("操作失败");
-        } /*finally {
-            if (fibonacciRpc!= null) {
-                try {
-                    fibonacciRpc.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }*/
-    }
+        }
 
+
+    }
 
 }

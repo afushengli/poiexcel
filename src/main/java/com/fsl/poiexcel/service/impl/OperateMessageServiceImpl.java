@@ -29,6 +29,12 @@ public class OperateMessageServiceImpl  implements OperateMessageService {
         return operateMessageMapper.selectByPrimaryKey(operateMessage);
     }
 
+    @Override
+    public int deleteByDocPath(String docPath) {
+        Example example = new Example(OperateMessage.class);
+        example.createCriteria().andEqualTo("docPath",docPath);
+        return operateMessageMapper.deleteByExample(example);
+    }
 
     @Override
     public int DeleteById(OperateMessage operateMessage) {
@@ -39,7 +45,7 @@ public class OperateMessageServiceImpl  implements OperateMessageService {
     public int DeleteOM(OperateMessage operateMessage) {
 
         Example example = new Example(OperateMessage.class);
-        example.createCriteria().andEqualTo("userId",operateMessage.getUserID()).andEqualTo("docPath",operateMessage.getDocPath());
+        example.createCriteria().andEqualTo("userId",operateMessage.getUserId()).andEqualTo("docPath",operateMessage.getDocPath());
 
         return operateMessageMapper.deleteByExample(example);
     }
@@ -52,6 +58,7 @@ public class OperateMessageServiceImpl  implements OperateMessageService {
     @Override
     public ServerResponse findOPerateByUserId(String userId) {
         Example example = new Example(OperateMessage.class);
+
         example.createCriteria().andEqualTo("userId",userId);
         List<OperateMessage> list  =operateMessageMapper.selectByExample(example);
         return ServerResponse.success("查询成功",list);

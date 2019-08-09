@@ -31,7 +31,7 @@ public class ViewControllerimpl implements WebMvcConfigurer {
                 //将login.html映射到路径urlpath为："/"上
                 registry.addViewController("/").setViewName("index");
                 registry.addViewController("/index.html").setViewName("index");
-                registry.addViewController("/main.html").setViewName("files");
+                registry.addViewController("/main.html").setViewName("main");
             }
 
             //注册拦截器

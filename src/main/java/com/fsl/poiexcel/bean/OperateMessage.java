@@ -23,17 +23,17 @@ public class OperateMessage implements Serializable {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String userID;
-    private String stepID; //步骤Id
+    private String userId;
+    private String stepId; //步骤Id
     private String docPath;
-    private String innerID; //操作标识
+    private String innerId; //操作标识
 
 
-    public OperateMessage(String userID,String stepID,String docPath,String innerID){
-        this.userID=userID;
-        this.stepID=stepID;
+    public OperateMessage(String userId,String stepId,String docPath,String innerId){
+        this.userId=userId;
+        this.stepId=stepId;
         this.docPath=docPath;
-        this.innerID =innerID;
+        this.innerId =innerId;
     }
 
 }

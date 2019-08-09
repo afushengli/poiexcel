@@ -1,23 +1,12 @@
 package com.fsl.poiexcel.job;
 
-import com.fsl.poiexcel.bean.Operatelock;
-import com.fsl.poiexcel.common.Constant;
 import com.fsl.poiexcel.mapper.OperatelockMapper;
 import com.fsl.poiexcel.util.JedisUtil;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.text.StrBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @Auther: chenrj
@@ -46,7 +35,7 @@ public class Schedule {
     //定时任务 0 */1 * * * ? 每分钟执行一次
     @Scheduled(cron="10 * * * * ?")
     public void scheduledMethod(){
-        logger.info("定时器被触发开始:"+new Date());
+       /* logger.info("定时器被触发开始:"+new Date());*/
 
 
 
@@ -58,7 +47,7 @@ public class Schedule {
         原文：https://blog.csdn.net/u014792342/article/details/79076770
         */
 
-       List<Operatelock> list = operatelockMapper.selectAll();
+     /*  List<Operatelock> list = operatelockMapper.selectAll();
 
        if(!CollectionUtils.isEmpty(list)){
 
@@ -91,10 +80,7 @@ public class Schedule {
                operatelockMapper.batchDeletebyid(map);
            }
        }
-        logger.info("定时器被触发结束:"+new Date());
-
-
-
+        logger.info("定时器被触发结束:"+new Date());*/
     }
 
 

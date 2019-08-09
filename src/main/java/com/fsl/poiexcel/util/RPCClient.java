@@ -26,7 +26,7 @@ public class RPCClient implements AutoCloseable {
 
     public RPCClient() throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        factory.setHost("192.168.189.104");
         factory.setPort(5672);
         factory.setUsername("guest");
         factory.setPassword("guest");
@@ -64,6 +64,7 @@ public class RPCClient implements AutoCloseable {
     public String call(String message) throws IOException, InterruptedException {
         final String corrId = UUID.randomUUID().toString();
 
+        //返回的临时队列
         String replyQueueName = channel.queueDeclare().getQueue();
 
         //System.out.println("replyQueueName:"+replyQueueName);
