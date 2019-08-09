@@ -5,6 +5,8 @@ package com.fsl.poiexcel.util;
  * @Date: 2019/8/7 14:11
  * @Description:
  */
+
+import com.fsl.poiexcel.common.Constant;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -26,10 +28,10 @@ public class RPCClient implements AutoCloseable {
 
     public RPCClient() throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("192.168.189.104");
-        factory.setPort(5672);
-        factory.setUsername("guest");
-        factory.setPassword("guest");
+        factory.setHost(Constant.RBBIT_MQ_HOST);
+        factory.setPort(Constant.RBBIT_MQ_POSRT);
+        factory.setUsername(Constant.RBBIT_MQ_USERNAME);
+        factory.setPassword(Constant.RBBIT_MQ_PASSWORD);
 
 
         connection = factory.newConnection();

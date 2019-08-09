@@ -59,6 +59,8 @@ public class SenderServiceImpl implements SenderService{
 
         RPCClient fibonacciRpc = null;
         String response = null;
+
+        boolean flag = false;
         try {
 
 
@@ -91,12 +93,14 @@ public class SenderServiceImpl implements SenderService{
                         }
 
                         if ("ADUIT".equals(message1.getInnerID()) || "FINAL".equals(message1.getInnerID())) {
+                            flag =true;
                             add.setUserId(message1.getUserID());
                             add.setDocPath(operateMessage.getDocPath());  // node不给传输了
                             add.setInnerId(message1.getInnerID());
                             add.setStepId(message1.getStepID());
                             operateMessageService.addOperateMessage(add);
                         } else if ("REJECT".equals(message1.getInnerID())) {
+                            flag =true;
                             add.setUserId(message1.getUserID());
                             add.setDocPath(operateMessage.getDocPath());  // node不给传输了
                             add.setInnerId(message1.getInnerID());
@@ -112,11 +116,23 @@ public class SenderServiceImpl implements SenderService{
                   }
                 return ServerResponse.success("操作成功");
             } else {
+                flag =true;
                 return ServerResponse.error(repResJSON.getMessage());
             }
         } catch(IOException | TimeoutException | InterruptedException e){
+            flag =true;
             e.printStackTrace();
             return ServerResponse.error("操作失败");
+        }finally {
+            if(flag){
+                if(fibonacciRpc !=null ){
+                    try {
+                        fibonacciRpc.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
 
 
