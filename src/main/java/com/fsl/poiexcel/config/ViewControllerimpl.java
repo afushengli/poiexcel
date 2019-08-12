@@ -55,7 +55,6 @@ public class ViewControllerimpl implements WebMvcConfigurer {
                 WebMvcConfigurer.super.addResourceHandlers(registry);
             }
 
-
         };
         return adapter;
     }

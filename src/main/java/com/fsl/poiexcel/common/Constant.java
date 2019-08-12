@@ -6,7 +6,7 @@ public class Constant {
     public static final  Integer EXPIRE_DELETE_TIME = 10 * 60;
 
 
-    public static final String RBBIT_MQ_HOST="192.168.189.104";
+    public static final String RBBIT_MQ_HOST="127.0.0.1";
     public static final int RBBIT_MQ_POSRT=5672;
     public static final String RBBIT_MQ_USERNAME="guest";
     public static final String RBBIT_MQ_PASSWORD="guest";
