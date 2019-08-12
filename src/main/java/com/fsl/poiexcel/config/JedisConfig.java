@@ -1,15 +1,9 @@
 package com.fsl.poiexcel.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
-
-@Configuration
+//@Configuration
 public class JedisConfig {
 
-    @Value("${spring.redis.host}")
+  /*  @Value("${spring.redis.host}")
     private String host;
 
     @Value("${spring.redis.port}")
@@ -40,6 +34,6 @@ public class JedisConfig {
         JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout, password);
 
         return jedisPool;
-    }
+    }*/
 
 }
