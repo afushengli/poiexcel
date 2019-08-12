@@ -48,26 +48,14 @@
     $('#btn').click(function () {
 
 
-        aa("AGREE",function(data){
-            if (data.status === 0) {
-                alert("审批成功");
-            }else {
-                alert("审批失败");
-            }
-        });
+        aa("AGREE");
 
     })
 
     $('#btn1').click(function () {
 
 
-        aa("CLOSE",function(data){
-            if (data.status === 0) {
-                alert("关闭成功");
-            }else {
-                alert("关闭失败");
-            }
-        });
+        aa("CLOSE");
 
     })
 
@@ -75,13 +63,7 @@
     $('#btn2').click(function () {
 
 
-        aa("REJECT",function(data){
-            if (data.status === 0) {
-                alert("驳回成功");
-            }else {
-                alert("驳回失败");
-            }
-        });
+        aa("REJECT");
 
     })
 
@@ -94,7 +76,14 @@
             url: '/message/opreate',
             data:{ id: idValue, operateStatus: inner_id},
             success: function (data) {
-              fn(data)
+
+                    if (data.status === 0) {
+                        alert(data.msg);
+                    }else {
+                        alert(data.msg);
+                    }
+
+                    location.reload();
             }
         })
 
