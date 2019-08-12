@@ -60,10 +60,10 @@ public class SenderServiceImpl implements SenderService{
         RPCClient fibonacciRpc = null;
         String response = null;
 
+        log.info("------发送消息-------");
+
         boolean flag = false;
         try {
-
-
 
             fibonacciRpc = new RPCClient();
             String json = JSON.toJSONString(message);
@@ -124,15 +124,19 @@ public class SenderServiceImpl implements SenderService{
             e.printStackTrace();
             return ServerResponse.error("操作失败");
         }finally {
+
             if(flag){
                 if(fibonacciRpc !=null ){
                     try {
+                        log.info("------连接关闭----");
                         fibonacciRpc.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             }
+
+
         }
 
 

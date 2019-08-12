@@ -50,6 +50,10 @@ public class OpreateController {
 
 
         OperateMessage operateMessage =  operateMessageService.findOPerateById(Integer.valueOf(id));
+        if(operateMessage ==null){
+            return  ServerResponse.error("已在别处操作");
+        }
+
         operateMessage.setInnerId(operateStatus);
 
 
