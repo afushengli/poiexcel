@@ -123,7 +123,7 @@ public class SenderServiceImpl implements SenderService{
             flag =true;
             e.printStackTrace();
             return ServerResponse.error("操作失败");
-        }finally {
+        }/*finally {
 
             if(flag){
                 if(fibonacciRpc !=null ){
@@ -138,7 +138,7 @@ public class SenderServiceImpl implements SenderService{
 
 
         }
-
+*/
 
     }
 
