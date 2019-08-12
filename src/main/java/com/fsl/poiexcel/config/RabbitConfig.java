@@ -1,7 +1,10 @@
 package com.fsl.poiexcel.config;
 
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -10,36 +13,16 @@ import org.springframework.context.annotation.Configuration;
  * @Description:
  */
 @Configuration
-@Data
 public class RabbitConfig {
 
 
 
 
-    @Value("${spring.rabbitmq.host}")
-    private  String host;
-
-    @Value("${spring.rabbitmq.port}")
-    private int port;
-
-
-    @Value("${spring.rabbitmq.username}")
-    private String username;
-
-
-    @Value("${spring.rabbitmq.password}")
-    private String password;
-
-    @Value("${spring.rabbitmq.virtual-host}")
-    private String virtualHost;
-
-    @Value("${spring.rabbitmq.publisher-confirms}")
-    private boolean publisherConfirms;
 
 
 
 
-    /*@Bean
+    @Bean
     public Queue opreateQuence() {
         return new Queue("rpc_queue");
     }
@@ -53,7 +36,7 @@ public class RabbitConfig {
     @Bean
     public Binding binding1() {
         return BindingBuilder.bind(opreateQuence()).to(topicExchange()).with("key.1");
-    }*/
+    }
 
 
 }
