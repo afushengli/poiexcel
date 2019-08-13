@@ -11,6 +11,8 @@ import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -19,6 +21,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeoutException;
 
 public class RPCClient implements AutoCloseable {
+
+    private static final Logger log = LoggerFactory.getLogger(RPCClient.class);
 
     private static  Connection connection;
     private static Channel channel;
@@ -88,7 +92,8 @@ public class RPCClient implements AutoCloseable {
         });
 
         String result = response.take();
-        //channel.basicCancel(ctag);
+        log.info("消费的临时队列名称:"+ctag );
+        channel.basicCancel(ctag);
         return result;
     }
 

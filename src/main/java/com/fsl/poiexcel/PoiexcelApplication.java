@@ -74,9 +74,9 @@ public class PoiexcelApplication extends WebMvcConfigurerAdapter {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowCredentials(true)
-                .allowedHeaders("*")
-                .allowedOrigins("*")
-                .allowedMethods("*");
+                .allowedHeaders("*")    // 1允许任何域名使用
+                .allowedOrigins("*")   // 2允许任何头
+                .allowedMethods("*"); // 3允许任何方法（post、get等）
     }
 
 
