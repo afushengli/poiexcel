@@ -6,19 +6,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+
+    <link rel="stylesheet" type="text/css" href="http://cdn.grapecity.com/spreadjs/hosted/css/gc.spread.sheets.excel2013white.12.1.0.css">
+    <script src="/js/demo/jquery-1.8.2.min.js" type="text/javascript"></script>
+    <script src="/js/demo/gc.spread.sheets.all.12.0.0.min.js" type="text/javascript"></script>
+    <script src="/js/demo/FileSaver.js" type="text/javascript"></script>
+    <script src="/js/demo/gc.spread.excelio.12.0.0.min.js" type="text/javascript"></script>
+    <script src="/js/demo/gc.spread.sheets.charts.12.0.0.min.js" type="text/javascript"></script>
+
 </head>
 
-<body>
+<body
+        style="margin:0;position:absolute;top:0;bottom:0;left:0;right:0;font-size:14px;user-select:none;-webkit-user-select: none;overflow:hidden;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';">
+
 <div id="test-id"> </div>
 <button id="btn">同意</button>
 <button id="btn2">驳回</button>
 <button id="btn1">关闭</button>
+
+<div style="height: 90%; position: relative">
+    <div id='ss' style='width:100%; height:100%;'></div>
+    <form name="myform" id="myform" enctype="multipart/form-data" method="post">
+    </form>
+</div>
+
 <script src="http://code.jquery.com/jquery-1.8.2.min.js" type="text/javascript"></script>
 <script>
     $('#btn').attr("disabled", true);
     $('#btn1').attr("disabled", true);
     $('#btn2').attr("disabled", true);
     var idValue = '';
+
+    var spread = new GC.Spread.Sheets.Workbook(document.getElementById("ss"));
+    spreadNS = GC.Spread.Sheets;
+    var excelIo = new GC.Spread.Excel.IO();
+
+
     $.ajax({
         type: 'get',
         url: '/message/findUserOpreate',
@@ -37,12 +60,61 @@
                     $('#btn2').attr("disabled", false);
                 }
 
-
                 $("#test-id").html(data.data[0].docPath)
+
+                 initSpreadData(data.data[0].docPath);
 
             }
         }
     })
+
+
+    function initSpreadData(fileName) {
+
+        return new Promise((resolve, reject) => {
+
+            var xhr = new XMLHttpRequest();
+        xhr.open('GET', "/message/downFileFromBack?fileName=" + fileName + "", true); //同步请求
+        xhr.responseType = 'blob';
+        xhr.onload = async function (e) {
+            if (this.status == 200) {
+                // get binary data as a response
+                var blob = this.response;
+                var result = await blobToJson(blob)
+                if (typeof result === 'string' && result.indexOf('未登录') != -1) {
+                    redirtLogin()
+                    return;
+                }
+                // convert Excel to JSON
+                excelIo.open(blob, function (json) {
+                    var workbookObj = json;
+                    spread.fromJSON(workbookObj);
+                    var sheet = spread.getActiveSheet();
+                    //设置表单保护属性
+                    var option = {
+                        allowSelectLockedCells: true,
+                        allowSelectUnlockedCells: true,
+                        allowFilter: true,
+                        allowResizeRows: true,
+                        allowResizeColumns: true
+                    };
+                    sheet.options.protectionOptions = option;
+                    resolve()
+                }, function (e) {
+                    // process error
+                    alert(e.errorMessage);
+                    reject()
+                }, {});
+            }
+        };
+        xhr.onerror = function (e) {
+            alert("加载数据失败:" + e.message)
+            reject()
+        }
+        xhr.send();
+    })
+
+    }
 
 
     $('#btn').click(function () {
