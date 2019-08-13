@@ -42,7 +42,7 @@ public class RPCClient implements AutoCloseable {
         channel = connection.createChannel();
     }
 
-    public static void main(String[] argv) {
+ /*   public static void main(String[] argv) {
 
         RPCClient fibonacciRpc = null;
         String response = null;
@@ -65,7 +65,7 @@ public class RPCClient implements AutoCloseable {
                 catch (IOException _ignore) {}
             }
         }
-    }
+    }*/
 
     public String call(String message) throws IOException, InterruptedException {
         final String corrId = UUID.randomUUID().toString();
@@ -92,7 +92,7 @@ public class RPCClient implements AutoCloseable {
         });
 
         String result = response.take();
-        log.info("消费的临时队列名称:"+ctag );
+        log.info("消费的临时队列名称:"+ctag  +"     收到的消息:" + result);
         channel.basicCancel(ctag);
         return result;
 
