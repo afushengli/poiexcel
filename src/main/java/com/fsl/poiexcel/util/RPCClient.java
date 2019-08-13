@@ -94,6 +94,8 @@ public class RPCClient implements AutoCloseable {
         String result = response.take();
         log.info("消费的临时队列名称:"+ctag );
         channel.basicCancel(ctag);
+        return result;
+
 
     }
 
