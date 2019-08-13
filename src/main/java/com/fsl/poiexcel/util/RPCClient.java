@@ -88,7 +88,7 @@ public class RPCClient implements AutoCloseable {
         });
 
         String result = response.take();
-        channel.basicCancel(ctag);
+        //channel.basicCancel(ctag);
         return result;
     }
 
