@@ -121,7 +121,7 @@ public class SenderServiceImpl implements SenderService{
             }
         } catch(IOException | TimeoutException | InterruptedException e){
             flag =true;
-            log.info(e.printStackTrace());
+            log.info("发送消息异常:"+ e.getMessage());
             return ServerResponse.error("操作失败");
         }/*finally {
 
