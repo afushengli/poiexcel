@@ -1,8 +1,5 @@
 package com.fsl.poiexcel;
-import com.rabbitmq.client.AMQP;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.*;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -34,32 +31,47 @@ public class RPCClient11 {
 
     public static void main(String[] argv) {
 
-        for(int i=0;i<2;i++){
-            new Thread(
-                    new Runnable(){
+/*        for(int i=0;i<2;i++){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    RPCClient11 fibonacciRpc = null;
+                    String response = null;
+                    try {
+                        fibonacciRpc = new RPCClient11();
 
-                        public void run(){
+                        String i_str = Integer.toString(10);
+                        System.out.println(" [x] Requesting fib(" + i_str + ")");
+                        response = fibonacciRpc.call(i_str);
+                        System.out.println(" [.] Got '" + response + "'");
+                        //fibonacciRpc.close();
 
-                            RPCClient11 fibonacciRpc = null;
-                            String response = null;
-                            try {
-                                fibonacciRpc = new RPCClient11();
-
-                                String i_str = Integer.toString(10);
-                                System.out.println(" [x] Requesting fib(" + i_str + ")");
-                                response = fibonacciRpc.call(i_str);
-                                System.out.println(" [.] Got '" + response + "'");
-                                //fibonacciRpc.close();
-
-                            } catch (IOException | TimeoutException | InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-
-                        }
-
+                    } catch (IOException | TimeoutException | InterruptedException e) {
+                        e.printStackTrace();
                     }
-            ).start();
+                }
+            }).start();*/
+
+        for(int i=0;i<2;i++){
+
+
+            RPCClient11 fibonacciRpc = null;
+            String response = null;
+            try {
+                fibonacciRpc = new RPCClient11();
+
+                String i_str = Integer.toString(10);
+                System.out.println(" [x] Requesting fib(" + i_str + ")");
+                response = fibonacciRpc.call(i_str);
+                System.out.println(" [.] Got '" + response + "'");
+                //fibonacciRpc.close();
+
+            } catch (IOException | TimeoutException | InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+
         }
 
     }
@@ -87,6 +99,7 @@ public class RPCClient11 {
 
         String result = response.take();
         System.out.println(ctag);
+        //channel.basicCancel("ssss"); //consumerTag
         channel.basicCancel(ctag);
         return result;
     }
