@@ -70,7 +70,7 @@ public class SenderServiceImpl implements SenderService{
 
             log.info("发送mq消息:" + json);
             response = fibonacciRpc.call(json);
-            System.out.println("接收到的node返回的数据" + response);
+            log.info("接收到临时队列的返回的消息:" + response);
 
 
 
