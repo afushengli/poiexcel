@@ -23,6 +23,7 @@ public class LoginHandlerInterceptor implements HandlerInterceptor {
 
 
         Object user = request.getSession().getAttribute("loginUser");
+        logger.info("用户登录信息" + user.toString());
         if(user == null){
 
 
