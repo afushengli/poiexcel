@@ -90,12 +90,12 @@ public class RPCClient implements AutoCloseable {
                 response.offer(new String(delivery.getBody(), "UTF-8"));
             }
         }, consumerTag -> {
+
         });
 
 
         String result = response.take();
 
-        Thread.sleep(2000);
         log.info("消费的临时队列名称:"+ctag  +"     收到的消息:" + result);
         channel.basicCancel(ctag);
 
