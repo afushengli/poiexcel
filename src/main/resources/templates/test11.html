@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+<div id="test-id"> </div>
+<button id="btn">同意</button>
+<button id="btn2">驳回</button>
+<button id="btn1">关闭</button>
+<script src="http://code.jquery.com/jquery-1.8.2.min.js" type="text/javascript"></script>
+<script>
+    $('#btn').attr("disabled", true);
+    $('#btn1').attr("disabled", true);
+    $('#btn2').attr("disabled", true);
+    var idValue = '';
+    $.ajax({
+        type: 'get',
+        url: '/message/findUserOpreate',
+        success: function (data) {
+            if (data.status === 0) {
+                console.log(data.data[0].id);
+
+                idValue = data.data[0].id;
+
+                var  inner_id= data.data[0].innerId;
+                if(inner_id=="CLOSE"){
+                    $('#btn1').attr("disabled", false);
+
+                }else{
+                    $('#btn').attr("disabled", false);
+                    $('#btn2').attr("disabled", false);
+                }
+
+
+                $("#test-id").html(data.data[0].docPath)
+
+            }
+        }
+    })
+
+
+    $('#btn').click(function () {
+        $('#btn').attr("disabled", true);
+        $('#btn1').attr("disabled", true);
+        $('#btn2').attr("disabled", true);
+
+        aa("AGREE");
+
+    })
+
+    $('#btn1').click(function () {
+        $('#btn').attr("disabled", true);
+        $('#btn1').attr("disabled", true);
+        $('#btn2').attr("disabled", true);
+
+        aa("CLOSE");
+
+    })
+
+
+    $('#btn2').click(function () {
+        $('#btn').attr("disabled", true);
+        $('#btn1').attr("disabled", true);
+        $('#btn2').attr("disabled", true);
+
+        aa("REJECT");
+
+    })
+
+
+
+    function  aa(inner_id,fn)
+    {
+        $.ajax({
+            type: 'get',
+            url: '/message/opreate',
+            data:{ id: idValue, operateStatus: inner_id},
+            success: function (data) {
+
+                    if (data.status === 0) {
+                        alert(data.msg);
+                    }else {
+                        alert(data.msg);
+                    }
+
+                    location.reload();
+            }
+        })
+
+    }
+</script>
+</body>
+
+</html>
