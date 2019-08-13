@@ -43,7 +43,7 @@ public class ViewControllerimpl implements WebMvcConfigurer {
                 //addPathPatterns 添加拦截路径
                 //excludePathPatterns排除拦截路径
                 registry.addInterceptor(new LoginHandlerInterceptor()).addPathPatterns("/**")
-                        .excludePathPatterns("/index.html","/demo.html","/","/user/login","/static/**","/message/*");
+                        .excludePathPatterns("/index.html","/demo.html","/","/user/*","/static/**","/message/*");
             }
 
             //https://blog.csdn.net/nanshenjiang/article/details/81416654
