@@ -1,6 +1,7 @@
 package com.fsl.poiexcel.interceptor;
 
 import com.alibaba.fastjson.JSON;
+import com.fsl.poiexcel.common.ResponseCode;
 import com.fsl.poiexcel.common.ServerResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,13 +27,13 @@ public class LoginHandlerInterceptor implements HandlerInterceptor {
 
 
 
-           // String  errMsg = JSON.toJSONString(new ServerResponse(ResponseCode.NO_LOGIN_ERROR.getCode(), ResponseCode.NO_LOGIN_ERROR.getMsg(), null));
+            String  errMsg = JSON.toJSONString(new ServerResponse(ResponseCode.NO_LOGIN_ERROR.getCode(), ResponseCode.NO_LOGIN_ERROR.getMsg(), null));
 
-            //returnJson(response,new ServerResponse(ResponseCode.NO_LOGIN_ERROR.getCode(), ResponseCode.NO_LOGIN_ERROR.getMsg(), null));
+            returnJson(response,new ServerResponse(ResponseCode.NO_LOGIN_ERROR.getCode(), ResponseCode.NO_LOGIN_ERROR.getMsg(), null));
 
             //未登陆，返回登陆页面
-            request.setAttribute("msg","没有权限请先登陆");
-            request.getRequestDispatcher("/index.html").forward(request,response);
+            //request.setAttribute("msg","没有权限请先登陆");
+            //request.getRequestDispatcher("/index.html").forward(request,response);
             return false;
         }else{
             //已登陆，放行请求
