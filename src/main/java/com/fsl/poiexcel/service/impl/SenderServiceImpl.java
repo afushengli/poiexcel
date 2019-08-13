@@ -54,8 +54,8 @@ public class SenderServiceImpl implements SenderService{
 
     }
 
-
-    public ServerResponse sendMQMessage(OperateMessage operateMessage,Message message) {
+    //使用方法锁，保证发送、发送，接收、接收  改为发送、接收，发送、接收
+    public  synchronized  ServerResponse sendMQMessage(OperateMessage operateMessage,Message message) {
 
         RPCClient fibonacciRpc = null;
         String response = null;
