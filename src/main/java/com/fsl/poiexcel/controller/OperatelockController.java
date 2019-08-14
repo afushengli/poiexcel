@@ -97,9 +97,6 @@ public class OperatelockController {
 
       /*  MultipartResolver resolver = new CommonsMultipartResolver(request.getSession().getServletContext());
         MultipartHttpServletRequest multipartRequest = resolver.resolveMultipart(request);*/
-
-
-
         //https://blog.csdn.net/WU5229485/article/details/84400315
         //https://blog.csdn.net/weixin_44594056/article/details/88393683
         Map<String,MultipartFile> fileMap = multipartRequest.getFileMap();
@@ -211,8 +208,11 @@ public class OperatelockController {
         key.append(Constant.Redis.TOKEN_PREFIX).append(fileName);
 
 
+        logger.info("redis中的key:"+ key.toString());
+
 
         if (jedisUtil.exists(key.toString())) {
+
 
             String userName = jedisUtil.get(key.toString());
 
@@ -222,6 +222,8 @@ public class OperatelockController {
                 return  ServerResponse.error("已经有人在修改，不能修改",userName);
             }
         }else{
+            logger.info("r的key:"+ key.toString());
+            logger.info("user:"+ user);
             Operatelock op = new Operatelock(fileName,sheetName,new Date());
             op.setUserName(user);
             return operateLockService.editFile(op);
