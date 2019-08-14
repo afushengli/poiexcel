@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
@@ -40,12 +39,11 @@ public class OpreateController {
 
     @RequestMapping(value = "/downFileFromBack")
     @ResponseBody
-    public void downFileFromBack(HttpServletRequest request,
+    public void downFileFromBack(String fileName,
                                  HttpServletResponse response) throws IOException {
 
         int size = 4096;
         OutputStream os = null;
-        String fileName = request.getParameter("fileName");
         log.info("得到的文件名是:"+fileName);
         File importFile = new File(fileName);
         FileInputStream fis = null;
