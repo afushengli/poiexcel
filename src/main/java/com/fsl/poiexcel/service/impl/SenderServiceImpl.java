@@ -70,21 +70,15 @@ public class SenderServiceImpl implements SenderService{
             fibonacciRpc = new RPCClient();
             String json = JSON.toJSONString(message);
 
-            log.info("发送mq消息:" + json);
 
-            String aa = new String(path);
-            synchronized (aa) { //接收消息改为同步
+            synchronized (path) { //接收消息改为同步
+                log.info("发送mq消息:" + json);
+                String aa = new String(path);
                 response = fibonacciRpc.call(json);
+                log.info("接收到临时队列的返回的消息:" + response);
             }
 
-
-            log.info("接收到临时队列的返回的消息:" + response);
-
-
-
-
             Object repJson = JSON.parseObject(response, OperateMessageJson.class);
-
             OperateMessageJson repResJSON = (OperateMessageJson) repJson;
 
             if (repResJSON.getCode() == 1) {
