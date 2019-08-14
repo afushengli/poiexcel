@@ -4,6 +4,8 @@ import com.fsl.poiexcel.bean.OperateMessage;
 import com.fsl.poiexcel.common.ServerResponse;
 import com.fsl.poiexcel.service.OperateMessageService;
 import com.fsl.poiexcel.service.SenderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +29,7 @@ import java.io.OutputStream;
 public class OpreateController {
 
 
-
+   private static final Logger log = LoggerFactory.getLogger(OpreateController.class);
     @Autowired
     private SenderService senderService;
 
@@ -40,9 +42,11 @@ public class OpreateController {
     @ResponseBody
     public void downFileFromBack(HttpServletRequest request,
                                  HttpServletResponse response) throws IOException {
+
         int size = 4096;
         OutputStream os = null;
         String fileName = request.getParameter("fileName");
+        log.info("得到的文件名是:"+fileName);
         File importFile = new File(fileName);
         FileInputStream fis = null;
         try {
