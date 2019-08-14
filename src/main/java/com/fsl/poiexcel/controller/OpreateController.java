@@ -58,6 +58,7 @@ public class OpreateController {
                 os.flush();
             }
         } catch (Exception e) {
+            log.info(e.getMessage());
             e.printStackTrace();
         } finally{
             try {
