@@ -62,59 +62,11 @@
 
                 $("#test-id").html(data.data[0].docPath)
 
-                 initSpreadData(data.data[0].docPath);
 
             }
         }
     })
 
-
-    function initSpreadData(fileName) {
-
-        return new Promise((resolve, reject) => {
-
-            var xhr = new XMLHttpRequest();
-        xhr.open('GET', "/message/downFileFromBack?fileName=" + fileName + "", true); //同步请求
-        xhr.responseType = 'blob';
-        xhr.onload = async function (e) {
-            if (this.status == 200) {
-                // get binary data as a response
-                var blob = this.response;
-                var result = await blobToJson(blob)
-                if (typeof result === 'string' && result.indexOf('未登录') != -1) {
-                    redirtLogin()
-                    return;
-                }
-                // convert Excel to JSON
-                excelIo.open(blob, function (json) {
-                    var workbookObj = json;
-                    spread.fromJSON(workbookObj);
-                    var sheet = spread.getActiveSheet();
-                    //设置表单保护属性
-                    var option = {
-                        allowSelectLockedCells: true,
-                        allowSelectUnlockedCells: true,
-                        allowFilter: true,
-                        allowResizeRows: true,
-                        allowResizeColumns: true
-                    };
-                    sheet.options.protectionOptions = option;
-                    resolve()
-                }, function (e) {
-                    // process error
-                    alert(e.errorMessage);
-                    reject()
-                }, {});
-            }
-        };
-        xhr.onerror = function (e) {
-            alert("加载数据失败:" + e.message)
-            reject()
-        }
-        xhr.send();
-    })
-
-    }
 
 
     $('#btn').click(function () {
