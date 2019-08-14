@@ -6,7 +6,6 @@ import com.fsl.poiexcel.service.OperateMessageService;
 import com.fsl.poiexcel.service.SenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -40,7 +39,7 @@ public class OpreateController {
     @RequestMapping(value = "/downFileFromBack")
     @ResponseBody
     public void downFileFromBack(HttpServletRequest request,
-                                 HttpServletResponse response, Model model) throws IOException {
+                                 HttpServletResponse response) throws IOException {
         int size = 4096;
         OutputStream os = null;
         String fileName = request.getParameter("fileName");
