@@ -11,8 +11,6 @@ import org.apache.commons.lang3.text.StrBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -102,15 +100,8 @@ public class OperatelockController {
         Map<String,MultipartFile> fileMap = multipartRequest.getFileMap();
         MultipartFile file = fileMap.get("file");
         String fileName = file.getOriginalFilename();
-
         logger.info("自动保存文件名称:"+ fileName);
-
-        Resource resource = new ClassPathResource("public");
-        String realPath=  resource.getFile().getAbsolutePath();
-        File newfile  = new File(realPath, fileName);
-
-
-
+        File newfile  = new File(Constant.FILE_PATH,fileName);
 
         StrBuilder key = new StrBuilder();
         key.append(Constant.Redis.TOKEN_PREFIX).append(fileName);
@@ -126,7 +117,6 @@ public class OperatelockController {
                 } catch (Exception e) {
                     e.printStackTrace();
                     return ServerResponse.error("保存失败");
-
                 }
             }else{
                 return  ServerResponse.error("保存失败,不是同一个人进行的保存");
@@ -150,7 +140,6 @@ public class OperatelockController {
         Map<String,Object> resultMap = new HashMap<String,Object>();
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 
-
         //https://blog.csdn.net/WU5229485/article/details/84400315
         //https://blog.csdn.net/weixin_44594056/article/details/88393683
         Map<String,MultipartFile> fileMap = multipartRequest.getFileMap();
@@ -158,11 +147,11 @@ public class OperatelockController {
         String fileName = file.getOriginalFilename();
         logger.info("手动或者长时间不操作的保存:"+ fileName);
 
-        Resource resource = new ClassPathResource("public");
-        String realPath=  resource.getFile().getAbsolutePath();
-        File newfile  = new File(realPath, fileName);
+        //Resource resource = new ClassPathResource("public");
+       // String realPath=  resource.getFile().getAbsolutePath();
+       // File newfile  = new File(realPath, fileName);
 
-
+        File newfile  = new File(Constant.FILE_PATH,fileName);
 
 
         StrBuilder key = new StrBuilder();

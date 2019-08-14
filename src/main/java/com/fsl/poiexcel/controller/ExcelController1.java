@@ -3,6 +3,7 @@ package com.fsl.poiexcel.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.fsl.poiexcel.bean.Student;
 import com.fsl.poiexcel.bean.User;
+import com.fsl.poiexcel.common.Constant;
 import com.fsl.poiexcel.common.ServerResponse;
 import com.fsl.poiexcel.service.StuService;
 import com.fsl.poiexcel.service.TokenService;
@@ -168,6 +169,8 @@ public class ExcelController1 {
         Resource resource = new ClassPathResource("public");
         String realPath=  resource.getFile().getAbsolutePath();
         File importFile = new File(realPath, "work.xlsx");
+
+
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(importFile);
@@ -199,16 +202,20 @@ public class ExcelController1 {
                          HttpServletResponse response, Model model) throws IOException {
         int size = 4096;
         OutputStream os = null;
-        //  File importFile = new File("d:\\test.xlsx");
-           String fileName = request.getParameter("fileName");
-           String path="public/"+ fileName;
+
+        String fileName = request.getParameter("fileName");
+        /* String path="public/"+ fileName;
         ClassPathResource classPathResource = new ClassPathResource(path);
-       // String realPath=  resource.getFile().getAbsolutePath();
-        //File importFile = new File(realPath, fileName);
-        InputStream fis = null;
+        InputStream fis = null;*/
+
+
+        File importFile = new File(Constant.FILE_PATH, fileName);
+        FileInputStream fis = null;
+
+
         try {
-            //fis = new FileInputStream(importFile);
-            fis = classPathResource.getInputStream();
+            fis = new FileInputStream(importFile);
+            //fis = classPathResource.getInputStream();
             int len = 0;
             byte[] buf = new byte[size];
             os = response.getOutputStream();
