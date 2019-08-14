@@ -49,13 +49,15 @@ public class SenderServiceImpl implements SenderService{
         message1.setInnerID(operateMessage.getInnerId());
 
 
-        return sendMQMessage(operateMessage,message1);
+        return sendMQMessage(operateMessage.getDocPath(),operateMessage,message1);
 
 
     }
 
     //使用方法锁，保证发送、发送，接收、接收  改为发送、接收，发送、接收
-    public  synchronized  ServerResponse sendMQMessage(OperateMessage operateMessage,Message message) {
+    public    ServerResponse sendMQMessage(String path,OperateMessage operateMessage,Message message) {
+
+
 
         RPCClient fibonacciRpc = null;
         String response = null;
@@ -69,7 +71,13 @@ public class SenderServiceImpl implements SenderService{
             String json = JSON.toJSONString(message);
 
             log.info("发送mq消息:" + json);
-            response = fibonacciRpc.call(json);
+
+            String aa = new String(path);
+            synchronized (aa) { //接收消息改为同步
+                response = fibonacciRpc.call(json);
+            }
+
+
             log.info("接收到临时队列的返回的消息:" + response);
 
 
@@ -109,7 +117,7 @@ public class SenderServiceImpl implements SenderService{
                         } else if ("COPY".equals(message1.getInnerID())) {
                             Message copy = listM.get(0);
                             copy.setDocPath(operateMessage.getDocPath());
-                            sendMQMessage(operateMessage, copy);
+                            sendMQMessage(path,operateMessage, copy);
                             //现在  close  不做特殊处理
                         }
                      }
