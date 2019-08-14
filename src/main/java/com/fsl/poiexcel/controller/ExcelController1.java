@@ -201,12 +201,14 @@ public class ExcelController1 {
         OutputStream os = null;
         //  File importFile = new File("d:\\test.xlsx");
            String fileName = request.getParameter("fileName");
-        Resource resource = new ClassPathResource("public");
-        String realPath=  resource.getFile().getAbsolutePath();
-        File importFile = new File(realPath, fileName);
-        FileInputStream fis = null;
+           String path="public/"+ fileName;
+        ClassPathResource classPathResource = new ClassPathResource(path);
+       // String realPath=  resource.getFile().getAbsolutePath();
+        //File importFile = new File(realPath, fileName);
+        InputStream fis = null;
         try {
-            fis = new FileInputStream(importFile);
+            //fis = new FileInputStream(importFile);
+            fis = classPathResource.getInputStream();
             int len = 0;
             byte[] buf = new byte[size];
             os = response.getOutputStream();
