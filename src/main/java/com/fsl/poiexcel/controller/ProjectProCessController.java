@@ -1,0 +1,94 @@
+package com.fsl.poiexcel.controller;
+
+import com.fsl.poiexcel.bean.Project;
+import com.fsl.poiexcel.bean.Process;
+import com.fsl.poiexcel.common.ServerResponse;
+import com.fsl.poiexcel.service.ProcessService;
+import com.fsl.poiexcel.service.ProjectProcessService;
+import com.fsl.poiexcel.service.ProjectService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpSession;
+
+/**
+ * @Auther: chenrj
+ * @Date: 2019/8/15 12:12
+ * @Description:
+ */
+
+@Controller
+@RequestMapping("/projectProCess")
+public class ProjectProCessController {
+
+
+
+
+    @Autowired
+    private ProjectProcessService projectProCessService;
+
+    @Autowired
+    private ProjectService projectService;
+
+    @Autowired
+    private ProcessService processService;
+
+
+
+    @RequestMapping("/createProjectProcess")
+    @ResponseBody
+    public ServerResponse createProjectProcess( String projectId, String processId, HttpSession session) {
+
+
+        //Integer userId = getUserId(session);
+        Integer userId = 2;
+        Integer projectIdI = Integer.valueOf(projectId);
+        Integer processIdI = Integer.valueOf(processId);
+
+
+
+
+        Project project = projectService.findByPrimaryKey(projectIdI);
+        Process process = processService.findByPrimaryKey(processIdI);
+
+
+
+
+        return projectProCessService.createProjectProcess(userId,project,process);
+    }
+
+
+
+    @RequestMapping("/findFinishProcess")
+    @ResponseBody
+    public ServerResponse findFinishProcess(HttpSession session) {
+        return projectProCessService.findFinishProcess(getUserId(session));
+    }
+
+
+    @RequestMapping("/findNotFinishProcess")
+    @ResponseBody
+    public ServerResponse findNotFinishProcess(HttpSession session) {
+        return projectProCessService.findNotFinishProcess(getUserId(session));
+    }
+
+
+
+
+    private Integer getUserId(HttpSession session){
+        Integer userId = (Integer)session.getAttribute("userId");
+
+        return 2;
+       // return userId;
+    }
+
+
+
+
+
+
+
+
+}

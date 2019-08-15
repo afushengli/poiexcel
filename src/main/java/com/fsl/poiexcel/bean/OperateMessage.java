@@ -27,6 +27,7 @@ public class OperateMessage implements Serializable {
     private String stepId; //步骤Id
     private String docPath;
     private String innerId; //操作标识
+    private Integer projectProcessId;
 
 
     public OperateMessage(String userId,String stepId,String docPath,String innerId){

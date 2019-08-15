@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fsl.poiexcel.mapper.ProjectProcessMapper">
+
+
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true"    parameterType="com.fsl.poiexcel.bean.ProjectProcess"> 
+      insert into project_process (project_id,process_id,process_name,process_path,user_id,process_status) 
+       values (#{projectId,jdbcType=INTEGER},#{processId,jdbcType=INTEGER}, #{processName,jdbcType=VARCHAR}, 
+      #{processPath,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER},#{processStatus,jdbcType=VARCHAR}) 
+   </insert>
+
+</mapper>
