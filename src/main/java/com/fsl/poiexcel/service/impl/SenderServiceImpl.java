@@ -17,7 +17,6 @@ import org.springframework.util.CollectionUtils;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 
 /**
  * @Auther: chenrj
@@ -57,7 +56,8 @@ public class SenderServiceImpl implements SenderService{
     //使用方法锁，保证发送、发送，接收、接收  改为发送、接收，发送、接收
     public    ServerResponse sendMQMessage(String path,OperateMessage operateMessage,Message message) {
 
-
+        String aa = new String(path);
+        synchronized (path) {
 
         RPCClient fibonacciRpc = null;
         String response = null;
@@ -67,16 +67,16 @@ public class SenderServiceImpl implements SenderService{
         boolean flag = false;
         try {
 
-            fibonacciRpc = new RPCClient();
+            fibonacciRpc = RPCClient.getInstance();
             String json = JSON.toJSONString(message);
 
 
-            synchronized (path) { //接收消息改为同步
+                //接收消息改为同步
                 log.info("发送mq消息:" + json);
-                String aa = new String(path);
-                response = fibonacciRpc.call(json);
-                log.info("接收到临时队列的返回的消息:" + response);
-            }
+
+                  response = fibonacciRpc.call(json);
+                  log.info("接收到临时队列的返回的消息:" + response);
+
 
             Object repJson = JSON.parseObject(response, OperateMessageJson.class);
             OperateMessageJson repResJSON = (OperateMessageJson) repJson;
@@ -121,7 +121,7 @@ public class SenderServiceImpl implements SenderService{
                 flag =true;
                 return ServerResponse.error(repResJSON.getMessage());
             }
-        } catch(IOException | TimeoutException | InterruptedException e){
+        } catch(IOException | InterruptedException e){
             flag =true;
             log.info("发送消息异常:"+ e.getMessage());
             return ServerResponse.error("操作失败");
@@ -141,6 +141,7 @@ public class SenderServiceImpl implements SenderService{
 
         }
 */
+        }
 
     }
 

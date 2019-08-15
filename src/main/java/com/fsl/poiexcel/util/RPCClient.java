@@ -29,8 +29,31 @@ public class RPCClient implements AutoCloseable {
     private String requestQueueName = "rpc_queue";
 
 
+    private static class SingletonHolder{
+          /**
+          * 静态初始化器，由JVM来保证线程安全
+           */
+          private static RPCClient  instance;
 
-    public RPCClient() throws IOException, TimeoutException {
+        static {
+            try {
+                instance = new RPCClient();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static  RPCClient getInstance(){
+        return SingletonHolder.instance;
+    }
+
+
+
+
+    private RPCClient() throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(Constant.RBBIT_MQ_HOST);
         factory.setPort(Constant.RBBIT_MQ_POSRT);
