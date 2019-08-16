@@ -76,8 +76,11 @@ public class ProjectProcessServiceImpl implements ProjectProcessService {
 
         try {
             FileUtils.copyFile(sourceFile, destFile);
+            log.info("创建文件成功:" + destFile.getPath());
 
         } catch (IOException e) {
+
+            log.info("创建文件异常:" + e.getMessage());
             e.printStackTrace();
             return ServerResponse.error("流程文件创建失败");
         }
