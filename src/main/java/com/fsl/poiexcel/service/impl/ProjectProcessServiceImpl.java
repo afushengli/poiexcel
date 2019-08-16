@@ -34,6 +34,14 @@ public class ProjectProcessServiceImpl implements ProjectProcessService {
 
 
     @Override
+    public ServerResponse deleteById(Integer id) {
+        ProjectProcess projectProcess = new ProjectProcess();
+        projectProcess.setUserId(id);
+        projectProcessMapper.deleteByPrimaryKey(projectProcess);
+        return  ServerResponse.success("删除流程成功");
+    }
+
+    @Override
     public ServerResponse createProjectProcess(Integer userId, Project project, Process process) {
 
         ProjectProcess projectProcess = new ProjectProcess();
@@ -61,7 +69,7 @@ public class ProjectProcessServiceImpl implements ProjectProcessService {
 
         } catch (IOException e) {
             e.printStackTrace();
-            ServerResponse.error("流程文件创建失败");
+            return ServerResponse.error("流程文件创建失败");
         }
 
         projectProcess.setProcessPath(destFile.getPath());

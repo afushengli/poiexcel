@@ -60,15 +60,17 @@
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
 
-     <!--   <dependency>
-            <groupId>net.oschina.durcframework</groupId>
-            <artifactId>fastmybatis-spring-boot-starter</artifactId>
-            <version>1.0.3</version>
-        </dependency>-->
-
+        <!--Mybatis依赖-->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
+        <!--添加通用Mapper依赖-->
+        <dependency>
+            <groupId>tk.mybatis</groupId>
+            <artifactId>mapper-spring-boot-starter</artifactId>
             <version>2.0.0</version>
         </dependency>
 
@@ -104,11 +106,6 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>tk.mybatis</groupId>
-            <artifactId>mapper-spring-boot-starter</artifactId>
-            <version>2.0.0</version>
-        </dependency>
 
         <dependency>
             <groupId>commons-beanutils</groupId>

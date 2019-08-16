@@ -16,4 +16,6 @@ public interface ProjectProcessService {
 
 
     ServerResponse createProjectProcess(Integer userId, Project project, Process process);
+
+    ServerResponse deleteById(Integer  id);
 }

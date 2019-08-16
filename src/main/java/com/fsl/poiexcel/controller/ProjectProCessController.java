@@ -1,11 +1,13 @@
 package com.fsl.poiexcel.controller;
 
-import com.fsl.poiexcel.bean.Project;
+import com.fsl.poiexcel.bean.OperateMessage;
 import com.fsl.poiexcel.bean.Process;
+import com.fsl.poiexcel.bean.Project;
 import com.fsl.poiexcel.common.ServerResponse;
 import com.fsl.poiexcel.service.ProcessService;
 import com.fsl.poiexcel.service.ProjectProcessService;
 import com.fsl.poiexcel.service.ProjectService;
+import com.fsl.poiexcel.service.SenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +37,33 @@ public class ProjectProCessController {
     @Autowired
     private ProcessService processService;
 
+    @Autowired
+    private SenderService senderService;
+
+
+    @RequestMapping("/deleteFailurePP")
+    @ResponseBody
+    public ServerResponse deleteFailurePP(String id) {
+        Integer id1 = Integer.valueOf(id);
+        return projectProCessService.deleteById(id1);
+    }
+
+
+    @RequestMapping("/createOperateMessage")
+    @ResponseBody
+    public ServerResponse createOperateMessage(String stepId,String docPath,String innerId,String projectProcessId ,HttpSession session) {
+
+        OperateMessage operateMessage =  new OperateMessage();
+        operateMessage.setStepId(stepId);
+        operateMessage.setDocPath(docPath);
+        operateMessage.setInnerId(innerId);
+        operateMessage.setProjectProcessId(Integer.valueOf(projectProcessId));
+
+        //发送操作
+        return  senderService.send(operateMessage,session);
+    }
+
+
 
 
     @RequestMapping("/createProjectProcess")
@@ -42,8 +71,8 @@ public class ProjectProCessController {
     public ServerResponse createProjectProcess( String projectId, String processId, HttpSession session) {
 
 
-        //Integer userId = getUserId(session);
-        Integer userId = 2;
+        Integer userId = getUserId(session);
+        //Integer userId = 3;
         Integer projectIdI = Integer.valueOf(projectId);
         Integer processIdI = Integer.valueOf(processId);
 
@@ -52,8 +81,6 @@ public class ProjectProCessController {
 
         Project project = projectService.findByPrimaryKey(projectIdI);
         Process process = processService.findByPrimaryKey(processIdI);
-
-
 
 
         return projectProCessService.createProjectProcess(userId,project,process);
@@ -80,8 +107,8 @@ public class ProjectProCessController {
     private Integer getUserId(HttpSession session){
         Integer userId = (Integer)session.getAttribute("userId");
 
-        return 2;
-       // return userId;
+        //return 3;
+        return userId;
     }
 
 

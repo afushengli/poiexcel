@@ -85,8 +85,6 @@ public class OpreateController {
 
 
 
-
-
     @RequestMapping("/opreate")
     @ResponseBody
     public ServerResponse opreate(String id,String operateStatus,HttpSession session) {
