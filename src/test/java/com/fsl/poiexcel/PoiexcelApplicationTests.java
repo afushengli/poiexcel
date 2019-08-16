@@ -5,7 +5,6 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.rabbit.support.CorrelationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -13,7 +12,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -38,7 +36,7 @@ public class PoiexcelApplicationTests {
 
     @Test
     public  void testMq(){
-
+/*
         String aa ="hello word";
 
         CorrelationData correlationId = new CorrelationData(UUID.randomUUID().toString());
@@ -47,7 +45,7 @@ public class PoiexcelApplicationTests {
 
 
         log.info("结束发送消息:msg({})",aa);
-        log.info("消费者响应 :response({})",response+"   ");
+        log.info("消费者响应 :response({})",response+"   ");*/
     }
 
     @Test
