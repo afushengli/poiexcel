@@ -1,10 +1,9 @@
 package com.fsl.poiexcel.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.fsl.poiexcel.bean.Message;
-import com.fsl.poiexcel.bean.OperateMessage;
-import com.fsl.poiexcel.bean.OperateMessageJson;
+import com.fsl.poiexcel.bean.*;
 import com.fsl.poiexcel.common.ServerResponse;
+import com.fsl.poiexcel.mapper.ProjectProcessMapper;
 import com.fsl.poiexcel.service.OperateMessageService;
 import com.fsl.poiexcel.service.SenderService;
 import com.fsl.poiexcel.util.RPCClient;
@@ -13,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -34,6 +34,12 @@ public class SenderServiceImpl implements SenderService{
     @Autowired
     private OperateMessageService operateMessageService;
 
+
+    @Autowired
+    private ProjectProcessMapper projectProcessMapper;
+
+
+
     //发送消息，不需要实现任何接口，供外部调用。
     public ServerResponse send(OperateMessage operateMessage,HttpSession session){
 
@@ -48,13 +54,14 @@ public class SenderServiceImpl implements SenderService{
         message1.setInnerID(operateMessage.getInnerId());
 
 
-        return sendMQMessage(operateMessage.getDocPath(),operateMessage,message1);
+
+        return sendMQMessage(operateMessage.getProjectProcessId(),operateMessage.getDocPath(),operateMessage,message1);
 
 
     }
 
     //使用方法锁，保证发送、发送，接收、接收  改为发送、接收，发送、接收
-    public    ServerResponse sendMQMessage(String path,OperateMessage operateMessage,Message message) {
+    public    ServerResponse sendMQMessage(Integer projectProcessId,String path,OperateMessage operateMessage,Message message) {
 
         String aa = new String(path);
         synchronized (path) {
@@ -94,12 +101,13 @@ public class SenderServiceImpl implements SenderService{
                             operateMessageService.deleteByDocPath(message1.getDocPath());
                         }
 
-                        if ("ADUIT".equals(message1.getInnerID()) || "FINAL".equals(message1.getInnerID())) {
+                        if ("ADUIT".equals(message1.getInnerID())  || "CREATE".equals(message1.getInnerID())  || "SUBMIT".equals(message1.getInnerID()) ) {
                             flag =true;
                             add.setUserId(message1.getUserID());
                             add.setDocPath(operateMessage.getDocPath());  // node不给传输了
                             add.setInnerId(message1.getInnerID());
                             add.setStepId(message1.getStepID());
+                            add.setProjectProcessId(projectProcessId);
                             operateMessageService.addOperateMessage(add);
                         } else if ("REJECT".equals(message1.getInnerID())) {
                             flag =true;
@@ -107,12 +115,32 @@ public class SenderServiceImpl implements SenderService{
                             add.setDocPath(operateMessage.getDocPath());  // node不给传输了
                             add.setInnerId(message1.getInnerID());
                             add.setStepId(message1.getStepID());
+                            add.setProjectProcessId(projectProcessId);
+
                             operateMessageService.addOperateMessage(add);
                         } else if ("COPY".equals(message1.getInnerID())) {
                             Message copy = listM.get(0);
                             copy.setDocPath(operateMessage.getDocPath());
-                            sendMQMessage(path,operateMessage, copy);
+                            sendMQMessage(projectProcessId,path,operateMessage, copy);
                             //现在  close  不做特殊处理
+                        }else if("FINAL".equals(message1.getInnerID())){
+
+                            add.setUserId(message1.getUserID());
+                            add.setDocPath(operateMessage.getDocPath());  // node不给传输了
+                            add.setInnerId(message1.getInnerID());
+                            add.setStepId(message1.getStepID());
+                            add.setProjectProcessId(projectProcessId);
+                            operateMessageService.addOperateMessage(add);
+
+                            ProjectProcess projectProcess = new ProjectProcess();
+                            projectProcess.setProcessPath(ProcessStatusEnum.FINISH.getStatus());
+
+                            Example example = new Example(ProjectProcess.class);
+                            example.createCriteria().andEqualTo("id",projectProcessId);
+
+                            //根据id更新 状态
+                            projectProcessMapper.updateByExampleSelective(projectProcess,example);
+
                         }
                      }
                   }
