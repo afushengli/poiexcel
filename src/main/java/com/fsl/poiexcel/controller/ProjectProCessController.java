@@ -10,6 +10,7 @@ import com.fsl.poiexcel.service.ProjectService;
 import com.fsl.poiexcel.service.SenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -41,7 +42,7 @@ public class ProjectProCessController {
     private SenderService senderService;
 
 
-    @RequestMapping("/deleteFailurePP")
+    @PostMapping ("/deleteFailurePP")
     @ResponseBody
     public ServerResponse deleteFailurePP(String id) {
         Integer id1 = Integer.valueOf(id);
@@ -49,7 +50,7 @@ public class ProjectProCessController {
     }
 
 
-    @RequestMapping("/createOperateMessage")
+    @PostMapping ("/createOperateMessage")
     @ResponseBody
     public ServerResponse createOperateMessage(String stepId,String docPath,String innerId,String projectProcessId ,HttpSession session) {
 
@@ -66,7 +67,7 @@ public class ProjectProCessController {
 
 
 
-    @RequestMapping("/createProjectProcess")
+    @PostMapping("/createProjectProcess")
     @ResponseBody
     public ServerResponse createProjectProcess( String projectId, String processId, HttpSession session) {
 
@@ -88,14 +89,14 @@ public class ProjectProCessController {
 
 
 
-    @RequestMapping("/findFinishProcess")
+    @PostMapping("/findFinishProcess")
     @ResponseBody
     public ServerResponse findFinishProcess(HttpSession session) {
         return projectProCessService.findFinishProcess(getUserId(session));
     }
 
 
-    @RequestMapping("/findNotFinishProcess")
+    @PostMapping("/findNotFinishProcess")
     @ResponseBody
     public ServerResponse findNotFinishProcess(HttpSession session) {
         return projectProCessService.findNotFinishProcess(getUserId(session));

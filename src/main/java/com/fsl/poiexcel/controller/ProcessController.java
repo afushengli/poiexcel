@@ -4,6 +4,7 @@ import com.fsl.poiexcel.common.ServerResponse;
 import com.fsl.poiexcel.service.ProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -19,7 +20,7 @@ public class ProcessController {
     @Autowired
     private ProcessService processService;
 
-    @RequestMapping("/findAllProcess")
+    @PostMapping("/findAllProcess")
     @ResponseBody
     public ServerResponse findAllProcess() {
 
