@@ -9,6 +9,8 @@ import com.fsl.poiexcel.common.ServerResponse;
 import com.fsl.poiexcel.mapper.ProjectProcessMapper;
 import com.fsl.poiexcel.service.ProjectProcessService;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -27,6 +29,8 @@ import java.util.List;
  */
 @Service
 public class ProjectProcessServiceImpl implements ProjectProcessService {
+
+    private static final Logger log = LoggerFactory.getLogger(ProjectProcessServiceImpl.class);
 
 
     @Autowired
@@ -60,6 +64,12 @@ public class ProjectProcessServiceImpl implements ProjectProcessService {
         String destFilePath = Constant.PROCESS_FILE_PATH +  process.getFilePath();
         String [] sp =process.getFileName().split("\\.");
         String destFileName= process.getProcessType() + "_" + sp[0] +"_"+ dataStr()+ "." +sp[1];
+
+
+        log.info("源文件路径:"+sourceFile.getPath());
+        log.info("destFilePath:" + destFilePath);
+
+
 
         File destFile = new File(destFilePath,destFileName);
 
