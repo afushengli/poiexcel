@@ -75,6 +75,8 @@ public class SenderServiceImpl implements SenderService{
         try {
 
             fibonacciRpc = RPCClient.getInstance();
+
+            //message 是要发送的消息
             String json = JSON.toJSONString(message);
 
 
@@ -89,17 +91,25 @@ public class SenderServiceImpl implements SenderService{
             OperateMessageJson repResJSON = (OperateMessageJson) repJson;
 
             if (repResJSON.getCode() == 1) {
-                //删除数据
+
+                //删除已经操作数据
                 operateMessageService.DeleteById(operateMessage);
+
+
+
                 List<Message> listM = repResJSON.getData();
+
 
                 if (!CollectionUtils.isEmpty(listM)) {  //处理并发操作
                     for (Message message1 : listM) {
                         OperateMessage add = new OperateMessage();
 
-                        if("REJECT" .equals(message.getInnerID()) || "CLOSE".equals(message.getInnerID())){
-                            operateMessageService.deleteByDocPath(message1.getDocPath());
+                        if("REJECT" .equals(message1.getInnerID()) || "CLOSE".equals(message1.getInnerID())){
+                            log.info("删除驳回的路径是："+ message1.getDocPath());
+                            int result =  operateMessageService.deleteByDocPath(message1.getDocPath());
+                            log.info("删除几条数据："+ result);
                         }
+
 
                         if ("ADUIT".equals(message1.getInnerID())  || "CREATE".equals(message1.getInnerID())  || "SUBMIT".equals(message1.getInnerID()) ) {
                             flag =true;
@@ -119,10 +129,14 @@ public class SenderServiceImpl implements SenderService{
 
                             operateMessageService.addOperateMessage(add);
                         } else if ("COPY".equals(message1.getInnerID())) {
+
+
                             Message copy = listM.get(0);
                             copy.setDocPath(operateMessage.getDocPath());
                             sendMQMessage(projectProcessId,path,operateMessage, copy);
                             //现在  close  不做特殊处理
+
+
                         }else if("FINAL".equals(message1.getInnerID())){
 
                             add.setUserId(message1.getUserID());
