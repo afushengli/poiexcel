@@ -111,7 +111,7 @@ public class SenderServiceImpl implements SenderService{
                         }
 
 
-                        if ("ADUIT".equals(message1.getInnerID())  || "CREATE".equals(message1.getInnerID())  || "SUBMIT".equals(message1.getInnerID()) ) {
+                        if ("ADUIT".equals(message1.getInnerID())  || "CREATE".equals(message1.getInnerID())  || "SUBMIT".equals(message1.getInnerID()) ||  "FINAL".equals(message1.getInnerID())) {
                             add.setUserId(message1.getUserID());
                             add.setDocPath(operateMessage.getDocPath());  // node不给传输了
                             add.setInnerId(message1.getInnerID());
@@ -133,8 +133,7 @@ public class SenderServiceImpl implements SenderService{
                             sendMQMessage(projectProcessId,path,operateMessage, copy);
                             //现在  close  不做特殊处理
 
-
-                        }else if("FINAL".equals(message1.getInnerID())){
+                        }else if("CLOSE".equals(message1.getInnerID())){
 
                             add.setUserId(message1.getUserID());
                             add.setDocPath(operateMessage.getDocPath());  // node不给传输了
@@ -143,11 +142,8 @@ public class SenderServiceImpl implements SenderService{
                             add.setProjectProcessId(projectProcessId);
                             operateMessageService.addOperateMessage(add);
 
-                        }else if("CLOSE".equals(message1.getInnerID())){
-
                             ProjectProcess projectProcess = new ProjectProcess();
                             projectProcess.setProcessStatus(ProcessStatusEnum.FINISH.getStatus());
-
                             Example example = new Example(ProjectProcess.class);
                             example.createCriteria().andEqualTo("id",projectProcessId);
 
