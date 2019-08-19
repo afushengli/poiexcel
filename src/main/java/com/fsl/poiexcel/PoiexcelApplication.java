@@ -4,6 +4,7 @@ package com.fsl.poiexcel;
 import com.fsl.poiexcel.excepetion.MyLocaleResolver;
 import com.fsl.poiexcel.interceptor.AccessLimitInterceptor;
 import com.fsl.poiexcel.interceptor.ApiIdempotentInterceptor;
+import com.fsl.poiexcel.util.JwtUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -66,6 +67,12 @@ public class PoiexcelApplication extends WebMvcConfigurerAdapter {
     @Bean
     public AccessLimitInterceptor accessLimitInterceptor() {
         return new AccessLimitInterceptor();
+    }
+
+    //jwt
+    @Bean
+    public JwtUtil jwtUtil(){
+        return new JwtUtil();
     }
 
 
