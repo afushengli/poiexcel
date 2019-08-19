@@ -1,4 +1,4 @@
-package util;
+package com.fsl.poiexcel.util;
 
 import java.lang.management.ManagementFactory;
 import java.net.InetAddress;

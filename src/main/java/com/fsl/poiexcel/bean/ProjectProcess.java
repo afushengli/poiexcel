@@ -23,7 +23,10 @@ public class ProjectProcess implements Serializable {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private Integer projectId;
+    private String projectName;
+
     private Integer processId;
     private String  processName;
     private String processPath;

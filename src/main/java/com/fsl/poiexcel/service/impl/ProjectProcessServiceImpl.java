@@ -52,6 +52,8 @@ public class ProjectProcessServiceImpl implements ProjectProcessService {
 
 
         projectProcess.setProjectId(project.getId());
+        projectProcess.setProjectName(project.getProjectName());
+
         projectProcess.setProcessId(process.getId());
         projectProcess.setProcessName(process.getProcessName());
 
