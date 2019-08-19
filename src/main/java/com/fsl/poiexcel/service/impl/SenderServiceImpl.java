@@ -146,6 +146,8 @@ public class SenderServiceImpl implements SenderService{
                             add.setProjectProcessId(projectProcessId);
                             operateMessageService.addOperateMessage(add);
 
+                        }else if("CLOSE".equals(message1.getInnerID())){
+
                             ProjectProcess projectProcess = new ProjectProcess();
                             projectProcess.setProcessPath(ProcessStatusEnum.FINISH.getStatus());
 
@@ -154,8 +156,9 @@ public class SenderServiceImpl implements SenderService{
 
                             //根据id更新 状态
                             projectProcessMapper.updateByExampleSelective(projectProcess,example);
-
                         }
+
+
                      }
                   }
                 return ServerResponse.success("操作成功");
