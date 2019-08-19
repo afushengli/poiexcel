@@ -105,8 +105,8 @@ public class SenderServiceImpl implements SenderService{
                         OperateMessage add = new OperateMessage();
 
                         if("REJECT" .equals(message1.getInnerID()) || "CLOSE".equals(message1.getInnerID())){
-                            log.info("删除驳回的路径是："+ message1.getDocPath());
-                            int result =  operateMessageService.deleteByDocPath(message1.getDocPath());
+                            log.info("删除驳回的路径是："+ operateMessage.getDocPath()  );
+                            int result =  operateMessageService.deleteByDocPath(operateMessage.getDocPath());
                             log.info("删除几条数据："+ result);
                         }
 
