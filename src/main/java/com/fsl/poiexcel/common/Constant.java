@@ -16,12 +16,12 @@ public class Constant {
 
 
     //审批流程模板所在的相对路径
-    public static final String PROCESS_TEMP_FILE_PATH="C:/poiexcel_app/xlsx/";
+    //public static final String PROCESS_TEMP_FILE_PATH="C:/poiexcel_app/xlsx/";
     //创建流程后的excel所在的路径
-    public static final String PROCESS_FILE_PATH = "C:/poiexcel_app/xlsx/";
+    //public static final String PROCESS_FILE_PATH = "C:/poiexcel_app/xlsx/";
 
-    //public static final String PROCESS_TEMP_FILE_PATH="/Users/a123/";
-    // public static final String PROCESS_FILE_PATH = "/Users/a123/Desktop";
+    public static final String PROCESS_TEMP_FILE_PATH="/Users/a123/";
+     public static final String PROCESS_FILE_PATH = "/Users/a123/Desktop";
 
     public interface Redis {
         String OK = "OK";
